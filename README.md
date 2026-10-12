@@ -16,7 +16,7 @@ git config --global user.email "@gmail.com"
 git config --global --list
 
 # 2. Generate SSH Key
-ssh-keygen -t ed25519 -C "ammasnithin93@gmail.com"
+ssh-keygen -t ed25519 -C "@gmail.com"
 
 # Press Enter for all prompts
 
