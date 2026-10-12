@@ -30,15 +30,56 @@ We will know the service is working through:
 Grant amounts and next steps are placeholders for now. The result page gives indicative grant amounts and directs users to a fictional application service. Amounts and the application process will be refined later if detailed policy rules are provided.
 
 ### In scope
+1. GOV.UK-style service layout (header, phase banner, cookie banner, footer)
 
-- GOV.UK-style service layout (header, phase banner, cookie banner, footer)
-- Start page with service information and Start Now button
-- 5 eligibility questions, each with help text: housing situation, household income, property type, insulation, main heating source
-- Check Your Answers page, with a Change link on each answer that returns the user to the summary after continuing
-- Eligibility decision (Eligible / Partially Eligible / Not Eligible)
-- Result page showing grant amount and next steps
-- Basic navigation (Continue, Back, Change links), with answers retained through the journey
-- Basic required-field validation
+2. Start page with service information and Start Now button
+
+3. 5 eligibility questions, each with help text:
+   - Housing situation
+   - Household income
+   - Property type
+   - Insulation
+   - Main heating source
+
+4. Check Your Answers page, with a Change link on each answer that returns the user to the summary after continuing
+
+5. Eligibility decision (Eligible / Partially Eligible / Not Eligible)
+
+6. Result page showing grant amount and next steps
+
+7. Basic navigation (Continue, Back, Change links), with answers retained throughout the journey
+
+8. Basic required-field validation
+
+9. Accessibility requirements:
+   - WCAG 2.2 AA compliant
+   - Semantic HTML
+   - Associated labels for all form controls
+   - Keyboard navigation support
+   - Visible focus indicators
+   - Sufficient colour contrast
+   - Screen-reader friendly content
+   - Responsive layout at 320px width
+
+10. GOV.UK Design System patterns:
+    - One thing per page
+    - GOV.UK Summary List
+    - GOV.UK Button component styling
+    - GOV.UK Back link pattern
+    - GOV.UK content and language guidance
+    - Consistent page headings and structure
+
+11. Performance requirements:
+    - Fast page load times
+    - Responsive on desktop, tablet and mobile
+    - State maintained throughout the user journey
+    - No unnecessary page reloads
+    - Cross-browser support (Chrome, Edge, Firefox, Safari)
+
+12. User outcome:
+    - Citizens receive an eligibility decision in under 2 minutes
+    - Users understand why they received their result
+    - Users can proceed without contacting the call centre
 
 ### Eligibility outcomes
 
