@@ -10,7 +10,7 @@ Green home grant scheme eligibility checker
 
 # 1. Configure Git Identity
 git config --global user.name "Nithin Sadanandan"
-git config --global user.email "ammasnithin93@gmail.com"
+git config --global user.email "@gmail.com"
 
 # Verify
 git config --global --list
