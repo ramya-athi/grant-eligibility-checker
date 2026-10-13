@@ -1,28 +1,16 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { readChoice, saveChoice } from '../cookieChoice';
 
-const COOKIE_KEY = 'green-home-grant-cookie-choice';
-
-function hasChosen() {
-  try {
-    return Boolean(localStorage.getItem(COOKIE_KEY));
-  } catch {
-    return false;
-  }
-}
-
-// No analytics are used, so the choice only hides the banner and is remembered in the browser.
+// The service sets no cookies and has no analytics. The choice only hides this message, and is kept
+// in the browser's storage for a year (see cookieChoice.js).
 export default function CookieBanner() {
-  const [chosen, setChosen] = useState(hasChosen);
+  const [chosen, setChosen] = useState(() => readChoice() !== null);
 
   if (chosen) return null;
 
   function choose(value) {
-    try {
-      localStorage.setItem(COOKIE_KEY, value);
-    } catch {
-      // Remembering the choice is optional.
-    }
+    saveChoice(value);
     setChosen(true);
   }
 
@@ -34,7 +22,11 @@ export default function CookieBanner() {
             <h2 className="govuk-cookie-banner__heading govuk-heading-m">Cookies on Green Home Grant</h2>
             <div className="govuk-cookie-banner__content">
               <p className="govuk-body">
-                We use a small number of essential cookies to make this service work. We do not use analytics cookies.
+                We do not set any cookies and we do not use analytics. We use your browser's storage to remember your
+                answers while this tab is open, and to remember this choice for 1 year.
+              </p>
+              <p className="govuk-body">
+                Choosing either button hides this message. It does not change how the service works.
               </p>
             </div>
           </div>
@@ -47,7 +39,7 @@ export default function CookieBanner() {
             Reject cookies
           </button>
           <Link className="govuk-link" to="/cookies">
-            View cookies
+            View cookies and storage
           </Link>
         </div>
       </div>

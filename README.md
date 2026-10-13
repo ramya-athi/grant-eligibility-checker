@@ -83,13 +83,17 @@ npm run a11y
 
 It prints each page with its violations and exits with an error if any are found. Set `BASE_URL` to scan another address.
 
+### Cookie check
+
+`npm run cookies` drives the cookie banner in a headless browser with the app running. It checks that the banner shows on a first visit and has Accept, Reject and View cookies and storage, that either choice hides it and it stays hidden after a reload and on the next page, that the choice is kept for 1 year and an expired or unreadable one brings the banner back, that it works with the keyboard, and that the Cookies page lists what is stored. It also checks that the service sets no real cookies, sends no `Set-Cookie` header, makes no requests to other sites, and keeps answers in session storage only.
+
 ## How this meets the rubric
 
 The hackathon rubric has six rows. This is where to find the evidence for each.
 
 | Rubric row | Where to look |
 |------------|---------------|
-| Functionality | The journey from start page, through five questions, to check your answers and the result. Rules in `starter/src/eligibility.js`. `npm test` runs 8 tests, including every one of the 1,568 answer combinations. The `check-eligibility` skill runs 26 named scenarios. |
+| Functionality | The journey from start page, through five questions, to check your answers and the result. Rules in `starter/src/eligibility.js`. `npm test` runs 14 tests, including every one of the 1,568 answer combinations and the cookie choice expiry. The `check-eligibility` skill runs 26 named scenarios. |
 | Code quality | One source for the questions (`questions.js`), pure and tested rules, small components, decisions written down in [`spec.md`](spec.md), and [`CLAUDE.md`](CLAUDE.md) describing how it fits together. |
 | AI effectiveness | [`starter/AI_LOG.md`](starter/AI_LOG.md) records each use of AI with what was generated and what was changed and why. [`intent.md`](intent.md), [`spec.md`](spec.md) and [`plan.md`](plan.md) show the planning, and two Claude Code skills in `.claude/skills/` explain and check the rules. |
 | Accessibility | Skip link, visible focus, labelled inputs, GOV.UK error summary, keyboard focus reset on each page, and an accessibility statement. `npm run a11y` runs axe on 26 scans. [`starter/AUDIT_LOG.md`](starter/AUDIT_LOG.md) records the before and after of the tests, Lighthouse, keyboard and 375px checks. |
@@ -113,7 +117,7 @@ starter/
     components/       Shared components (header, footer, cookie banner, radio question)
     hooks/            Answer storage and page titles
     app.scss          GOV.UK Frontend import (Arial font), the only stylesheet and no custom CSS
-  scripts/            Accessibility scan (axe) that checks every page
+  scripts/            Accessibility scan (axe) and cookie check, both run in a headless browser
   AI_LOG.md           Record of where AI was used and what was changed
   AUDIT_LOG.md        Before and after checks: tests, Lighthouse, keyboard, 375px, accessibility scan
 .claude/skills/       Claude Code skill that explains and checks the eligibility rules

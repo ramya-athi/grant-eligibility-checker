@@ -10,7 +10,7 @@ Each requirement can be checked by using the running app in a browser.
 
 1. Every page shows a GOV.UK-style header, a phase banner showing "alpha", and a footer.
 2. The footer has links to Accessibility statement, Privacy, Cookies, Terms and conditions, Help and Contact. Each link opens a page, even if it holds placeholder text.
-3. A cookie banner appears on first visit. After the user accepts or rejects cookies, it no longer appears on later pages or after a reload.
+3. A notice about cookies and browser storage appears on first visit, with Accept cookies, Reject cookies and "View cookies and storage". It says plainly that the service sets no cookies and uses no analytics, and that browser storage keeps the user's answers while the tab is open and this choice for 1 year. Choosing either button hides it, and it stays hidden after a reload and on every page. After a year it appears again.
 4. Every page has one main heading, and the browser tab title matches that heading.
 5. The Accessibility statement page has all its headings filled with real sentences, with no empty sections or "TODO" text.
 6. A web address that does not exist shows a "Page not found" page with a link back to the start, not a blank page.
@@ -69,6 +69,7 @@ Each requirement can be checked by using the running app in a browser.
 41. The result page has a way to start again. Starting again clears all previous answers, including after a reload.
 52. The result page has a "Print this page" link. Selecting it opens the browser's print dialog. The printed page shows the outcome, the reasons, the amount and next steps, and leaves out the header bar, banners, back link, footer, buttons and the print link itself.
 53. The Accessibility statement, Privacy, Cookies, Terms and conditions, Help, Contact and application placeholder pages each have a Back link at the top. It returns to the page the user came from (for example the question they were on, with their answers kept). If the page was opened directly, it goes to the start page. It works with the keyboard.
+54. The service sets no cookies, sends no `Set-Cookie` header and makes no requests to other sites. Answers are kept in session storage only. The cookie choice is kept in local storage with an expiry date one year ahead, an expired or unreadable value is ignored and removed, and a value saved by an earlier version is kept and given an expiry. The Cookies page says all of this and lists both stored items, what they are for and how long they are kept, in a table. `npm run cookies` and `npm test` check it.
 
 ### Accessibility, quality and running
 
@@ -111,6 +112,7 @@ Each requirement can be checked by using the running app in a browser.
 24. **Each outcome carries its own plain-English summary sentence, written in `eligibility.js` next to the rules:** the wording stays with the rule that produces it, so the two cannot drift apart, and tests check every combination has one.
 25. **An automated accessibility scan (`npm run a11y`) uses axe-core through Playwright and covers every page and state at two widths:** it gives repeatable evidence for the WCAG 2.2 AA requirement, and it exits with an error on any violation so it can run in CI.
 26. **A Back link on the footer pages that uses the browser history, falling back to the start page:** the GOV.UK Back link pattern returns users to the page they came from, which fits pages reachable from anywhere, and a plain "Home" link would drop the user's place in the journey. The service name in the header already links to the start page.
+27. **The cookie choice is stored as JSON with an expiry date in `src/cookieChoice.js`, which takes the storage object as a parameter:** one year matches GOV.UK services, and passing the storage in lets unit tests cover expiry, tampering and blocked storage without a browser. The banner and Cookies page wording says "browser storage" because the service sets no real cookies.
 
 ## 3. Open questions
 

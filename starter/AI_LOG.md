@@ -211,3 +211,30 @@ Document **3+ entries** in your AI_LOG covering **3-5 distinct patterns** from t
 | **Task** | Remove the two panel colour rules and make the result panel green |
 | **What AI Generated** | Deleted the two rules at the end of `app.scss`, so it now holds only the `govuk-frontend` import and its two settings. Removed the blue and grey panel classes from `ResultPage.jsx`, so every outcome uses `govuk-panel govuk-panel--confirmation`. |
 | **What You Changed + Why** | The user chose no custom CSS over colour-coded panels. The cost is that a Not Eligible result now appears in a green success panel, which could be read as good news at a glance. To reduce that risk without CSS, the wording does the work: the heading says "You are not eligible", and the line in the panel says "Your support" and "No grant" instead of "You may be eligible for". Checked in the browser that all three panels are green (rgb 15, 122, 82) with white text. Reran the browser checks, Back link tests, 26 accessibility scans (0 violations) and 8 unit tests, and all pass. Updated spec.md requirement 37 and decisions 12 and 23, plus plan.md, README and CLAUDE.md. If a reviewer raises the green Not Eligible panel, this log entry explains the choice. |
+
+## Instance 24: Documentation: accessibility scan result in the audit log
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Add the user's own run of `npm run a11y` to the audit log |
+| **What AI Generated** | A new "Accessibility scan results" section at the end of `AUDIT_LOG.md`: a summary table (26 scans, 0 violations, 0 to review, PASS), the full scan output in a code block, and a short note on what axe cannot check. |
+| **What You Changed + Why** | Copied the output exactly as the user pasted it, without changing a figure, so the log shows their run on lab11133 rather than mine. It matches my earlier run (26 of 26 clean). Kept the existing one-line row in the main table and added the detail below it. Added the limits note so the log does not claim more than the scan proves. |
+
+## Instance 25: Test generation: cookie behaviour check
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Add a Playwright check for the cookie banner and for what the service stores |
+| **What AI Generated** | `starter/scripts/cookie-check.mjs`, run with `npm run cookies`. 22 checks: the banner shows on a first visit on any page with Accept, Reject and View cookies and is a labelled region; either choice hides it, is remembered, and survives a reload and the next page; View cookies opens the cookies page; the keyboard works (Tab to Accept, Enter); a new visitor sees the banner again; and after a full journey the browser holds no cookies, the server sends no Set-Cookie header, no request leaves the service, and answers are in session storage and not local storage. |
+| **What You Changed + Why** | Every check passed first time, so I proved the script can fail by changing one expected value in a temporary copy: it printed FAIL and exited with code 1, and I deleted the copy. Found along the way that the banner's choice is kept in local storage, not in a cookie, so strictly the cookies page and banner talk about "cookies" while the app sets none. Recorded that in the audit log rather than hiding it. Added the command to the README and CLAUDE.md, a row to AUDIT_LOG.md and requirement 54 to spec.md. Not covered: what a real browser does with third-party blocking settings, and how a screen reader announces the banner. |
+
+## Instance 26: Feature: honest cookie wording, storage table and one-year expiry
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Improve how the service handles browser storage: say plainly that no cookies are set (improvement 1), list the stored items on the Cookies page (improvement 4) and make the saved choice expire after a year (improvement 6) |
+| **What AI Generated** | `src/cookieChoice.js` (read and save the choice as JSON with an expiry date, taking the storage as a parameter), `src/cookieChoice.test.js` (6 unit tests), a rewritten banner message, and a Cookies page with a GOV.UK table of the two stored items, what each is for and how long it is kept. Extended `npm run cookies` from 22 to 34 checks. |
+| **What You Changed + Why** | Read the request as improvements 1, 4 and 6 from my list, because it mentioned the browser storage and "the 6"; improvements 2, 3, 5 and 7 are not done. Kept the Accept and Reject buttons and their names so nothing else had to change, and wrote the banner so it says choosing either button only hides the message, rather than pretending Reject switches something off. Old stored values (the bare word "accepted") are still respected and upgraded, so existing visitors are not asked again by surprise. Checked in the browser: a choice with a day left is respected, an expired one brings the banner back and is removed, an unreadable one shows the banner instead of breaking, and the Cookies page lists both items. The accessibility scan (26 scans, 0 violations), the earlier browser checks, the Back link tests and 14 unit tests all pass. The service still sets no cookies and local storage is not a cookie, so the page says "browser storage". Updated spec.md requirements 3 and 54 and decision 27, the README, CLAUDE.md and AUDIT_LOG.md. Not done: letting people change their choice later. |

@@ -61,7 +61,10 @@ const NARROW = ['Start page', 'Question 1 with error summary', 'Check your answe
 async function scan(browser, entry, width) {
   const context = await browser.newContext({ viewport: { width, height: 900 } });
   if (!entry.freshCookies) {
-    await context.addInitScript((key) => localStorage.setItem(key, 'accepted'), COOKIE_KEY);
+    await context.addInitScript(
+      (key) => localStorage.setItem(key, JSON.stringify({ choice: 'accepted', expires: Date.now() + 86400000 })),
+      COOKIE_KEY
+    );
   }
   const page = await context.newPage();
   if (entry.answers) {

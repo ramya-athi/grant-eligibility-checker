@@ -12,9 +12,18 @@ const CONTENT = {
   cookies: {
     title: 'Cookies',
     body: [
-      'This service uses only essential browser storage to remember your answers and your cookie choice.',
-      'We do not use analytics or advertising cookies.',
+      'This service does not set any cookies, and it does not use analytics or advertising.',
+      'It does use your browser\'s storage. This is a small amount of information kept on your own device, and it is never sent to us. The table shows what is kept.',
     ],
+    table: {
+      caption: 'Browser storage used by this service',
+      head: ['Name', 'What it is for', 'How long it is kept'],
+      rows: [
+        ['green-home-grant-answers', 'Remembers your answers while you use the service, so you can go back and change them.', 'Until you close this browser tab'],
+        ['green-home-grant-cookie-choice', 'Remembers that you have seen the message about cookies, so we do not show it on every page.', '1 year'],
+      ],
+    },
+    after: ['You can clear both at any time in your browser settings. If you do, you will start again from the first question.'],
   },
   terms: {
     title: 'Terms and conditions',
@@ -53,6 +62,39 @@ export default function StaticPage({ pageKey }) {
       <PageBackLink />
       <h1 className="govuk-heading-l">{page.title}</h1>
       {page.body.map((text) => (
+        <p className="govuk-body" key={text}>
+          {text}
+        </p>
+      ))}
+      {page.table && (
+        <table className="govuk-table">
+          <caption className="govuk-table__caption govuk-table__caption--m">{page.table.caption}</caption>
+          <thead className="govuk-table__head">
+            <tr className="govuk-table__row">
+              {page.table.head.map((heading) => (
+                <th scope="col" className="govuk-table__header" key={heading}>
+                  {heading}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="govuk-table__body">
+            {page.table.rows.map((row) => (
+              <tr className="govuk-table__row" key={row[0]}>
+                <th scope="row" className="govuk-table__header">
+                  {row[0]}
+                </th>
+                {row.slice(1).map((cell) => (
+                  <td className="govuk-table__cell" key={cell}>
+                    {cell}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+      {(page.after || []).map((text) => (
         <p className="govuk-body" key={text}>
           {text}
         </p>
