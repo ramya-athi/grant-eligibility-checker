@@ -10,6 +10,11 @@ const HOSTNAME = process.env.VITE_PUBLIC_HOSTNAME || os.hostname();
 
 export default defineConfig({
   plugins: [react()],
+  css: {
+    // govuk-frontend still contains an old Internet Explorer media query hack that
+    // the CSS minifier rejects. Error recovery drops just those rules.
+    lightningcss: { errorRecovery: true },
+  },
   server: {
     host: '0.0.0.0',
     port: PORT,

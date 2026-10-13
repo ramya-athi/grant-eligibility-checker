@@ -1,0 +1,6 @@
+// GOV.UK Frontend, with Arial instead of the GDS Transport font.
+// GDS Transport may only be used on service.gov.uk, so we switch it off here.
+@use "../node_modules/govuk-frontend/dist/govuk" with (
+  $govuk-font-family: (arial, sans-serif),
+  $govuk-assets-path: "/assets/"
+);

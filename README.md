@@ -1,52 +1,101 @@
-# grant-eligibility-checker
-Green home grant scheme eligibility checker
+# Green Home Grant eligibility checker
 
-# Collabrators
-## Nithin
-## Ramya
+A GOV.UK-style service that tells a citizen whether they may be eligible for the Green Home Grant, a fictional scheme that funds home insulation and heat pumps. It replaces a phone call to the contact centre, which currently takes around 35 minutes, with an answer in under 2 minutes.
 
-# Details
-# First Time GitHub SSH Setup
+This is a prototype. The scheme is fictional, results are not real grant decisions, and grant amounts are placeholders.
 
-# 1. Configure Git Identity
-git config --global user.name "Nithin Sadanandan"
-git config --global user.email "@gmail.com"
+## What it does
 
-# Verify
-git config --global --list
+1. The user reads the start page and selects **Start now**.
+2. They answer five questions, one per page: housing situation, household income, property type, insulation, and main heating source.
+3. They check their answers, and can change any of them.
+4. They see a result with the reasons, an indicative maximum grant amount and next steps.
 
-# 2. Generate SSH Key
-ssh-keygen -t ed25519 -C "@gmail.com"
+### Outcomes
 
-# Press Enter for all prompts
+| Outcome | When |
+|---------|------|
+| Not Eligible | The user rents or lives in social housing, or household income is £60,000 or more |
+| Eligible | A homeowner with income under £40,000, in a house or bungalow, with no insulation and gas or electric heating |
+| Partially Eligible | Any other homeowner with income under £60,000, for example a flat or studio, heat pump support only, insulation support only, or a reduced grant because of income |
 
-# 3. Start SSH Agent
-eval "$(ssh-agent -s)"
+The rules are in `starter/src/eligibility.js`. The full list is in [`intent.md`](intent.md) and [`spec.md`](spec.md).
 
-# 4. Add SSH Key
-ssh-add ~/.ssh/id_ed25519
+## Requirements
 
-# 5. Display Public Key
-cat ~/.ssh/id_ed25519.pub
+- Node.js 20.19 or later (or 22.12 or later) and npm
+- Python 3.10 or later
 
-# 6. Copy the entire output and add it to:
-# GitHub > Settings > SSH and GPG Keys > New SSH Key
+## Run it
 
-# 7. Test SSH Connection
-ssh -T git@github.com
+All commands are run from the `starter` folder.
 
-# Expected Output
-# Hi <username>! You've successfully authenticated.
+```
+cd starter
+npm install
+pip install -r requirements.txt
+npm run build
+python3 server.py
+```
 
-# 8. Check Remote
-git remote -v
+The app is then at `http://localhost:5002`. The server listens on `0.0.0.0` so other machines can reach it.
 
-# 9. Change HTTPS to SSH
-git remote set-url origin git@github.com:ramya-athi/grant-eligibility-checker.git
+Run `npm run build` again after any change to the front end.
 
-# 10. Verify
-git remote -v
+### Choosing a port
 
-# Expected
-# origin git@github.com:ramya-athi/grant-eligibility-checker.git (fetch)
-# origin git@github.com:ramya-athi/grant-eligibility-checker.git (push)
+The default port is 5002. Set `PORT` to use another one:
+
+```
+PORT=5000 python3 server.py
+```
+
+If you see "Address already in use", an earlier copy is still running. Stop it with `pkill -f "python3 server.py"`.
+
+### On the lab VM
+
+The lab proxy maps `appN-<lab>` addresses to port `500N`, so for lab 11133:
+
+| Port | Address |
+|------|---------|
+| 5002 | https://app2-lab11133.labs.decoded.com/ |
+| 5000 | https://app-lab11133.labs.decoded.com/ |
+
+## Test it
+
+```
+cd starter
+npm test
+```
+
+This runs the eligibility rules against named cases and all 1,568 possible combinations of answers.
+
+## Project layout
+
+```
+intent.md             What the service is for, who uses it, success, and what is out of scope
+spec.md               Requirements, decisions and open questions
+plan.md               The build plan
+starter/
+  server.py           Python (Flask) server for the built app
+  src/
+    eligibility.js    The eligibility rules and placeholder grant amounts
+    questions.js      Question wording and answer options
+    pages/            One component per page
+    components/       Shared components (header, footer, cookie banner, radio question)
+    hooks/            Answer storage and page titles
+    app.scss          GOV.UK Frontend styles (Arial font)
+    custom.css        Result panel colours
+  AI_LOG.md           Record of where AI was used and what was changed
+.claude/skills/       Claude Code skill that explains and checks the eligibility rules
+```
+
+## Built with
+
+- React and Vite for the pages
+- [GOV.UK Frontend](https://frontend.design-system.service.gov.uk/) for the look and components, using Arial instead of GDS Transport
+- Python and Flask to serve the built app
+
+## Out of scope
+
+Real applications, accounts and sign in, saving progress between visits, uploading evidence, staff tools, payments, integration with government systems, and notifications. See [`intent.md`](intent.md) for the full list.

@@ -49,7 +49,7 @@ Grant amounts and next steps are placeholders for now. The result page gives ind
 
 7. Basic navigation (Continue, Back, Change links), with answers retained throughout the journey
 
-8. Basic required-field validation
+8. Basic required-field validation, shown as a GOV.UK error summary and an inline message
 
 9. Accessibility requirements:
    - WCAG 2.2 AA compliant
@@ -121,4 +121,4 @@ Grant amounts and next steps are placeholders for now. The result page gives ind
 - Appeals or reconsideration process
 - Multi-language support
 - Live chat support
-- Advanced validation and GOV.UK error summaries (Phase 2)
+- Advanced validation beyond required-field checks (Phase 2)
