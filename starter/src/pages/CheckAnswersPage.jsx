@@ -1,14 +1,21 @@
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import GovukButton from '../components/GovukButton';
 import usePageTitle from '../hooks/usePageTitle';
+import { generateReference } from '../reference';
 import { QUESTIONS, displayAnswer, firstMissingPath } from '../questions';
 
-function CheckAnswersPage({ answers }) {
+function CheckAnswersPage({ answers, setReference }) {
   const navigate = useNavigate();
   usePageTitle('Check your answers');
 
   const missing = firstMissingPath(answers);
   if (missing) return <Navigate to="/ownership" replace />;
+
+  // Submit gives the check a reference number, made in the browser only (spec 23, 52-58)
+  function submit() {
+    setReference(generateReference());
+    navigate('/result');
+  }
 
   return (
     <>
@@ -29,7 +36,7 @@ function CheckAnswersPage({ answers }) {
           </div>
         ))}
       </dl>
-      <GovukButton onClick={() => navigate('/result')}>Submit</GovukButton>
+      <GovukButton onClick={submit}>Submit</GovukButton>
     </>
   );
 }

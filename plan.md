@@ -66,3 +66,39 @@ Files:
 - `.gitignore` at the repository root for `node_modules` and `dist` (the git removal of the already-committed `node_modules` waits on your answer to open question 19).
 
 Check: in `starter/`, run `npm run build` and `python3 server.py`. Open `http://localhost:5002`, and from another machine `http://<this-machine>:5002`. Typing `/income` directly and reloading `/result` both work. Then run `npm test` once more and repeat the Step 4 journeys on port 5002 as the final check.
+
+## Step 6: Reference number, shown in the browser only (spec 23, 37, 41, 52-58; decisions 23-29)
+
+This is a new feature, added after the first build. Steps 1 to 5 are already done. Nothing is stored and `server.py` does not change.
+
+Files:
+- new `starter/src/reference.js`:
+  - `generateReference(now, getRandomValues)` returns `ELG-ddmmyy-XXXXXX`
+  - `ukDate(now)` gives the Europe/London date as `ddmmyy`
+  - the random part uses `crypto.getRandomValues` with the alphabet `ABCDEFGHJKMNPQRSTUVWXYZ23456789` (no 0, O, 1, I or L)
+- new `starter/src/reference.test.js`, which runs with `npm test`, checking:
+  - the format
+  - that look-alike characters never appear
+  - the UK date just after midnight in British Summer Time, and in winter
+  - that the random source passed in is used
+  - that two references differ
+- `starter/src/hooks/useAnswers.js`: also keep `reference` in session storage. `setAnswer` clears it only when an answer value actually changes, and `resetAnswers` clears it too.
+- `starter/src/App.jsx`: pass `setReference` to `CheckAnswersPage` and `reference` to `ResultPage`.
+- `starter/src/pages/CheckAnswersPage.jsx`: Submit calls `setReference(generateReference())`, then goes to `/result`.
+- `starter/src/pages/ResultPage.jsx`:
+  - redirect to `/check-answers` when all answers are present but there is no reference
+  - panel shows the outcome heading, then "Your reference number" and the reference in bold
+  - `result.support` moves out of the panel, to the top of the details
+- `CLAUDE.md`: note where the reference is made and that nothing is stored.
+- `starter/AI_LOG.md`: add an entry for this change.
+
+Check:
+- In `starter/`, run `npm test`. All tests pass, including the new reference tests.
+- Then `npm run build` and `python3 server.py`, and in the browser:
+  - complete a journey and press Submit. The result page shows the outcome, then a reference matching `ELG-<today as ddmmyy>-XXXXXX` (no 0, O, 1, I or L), then the details.
+  - in the browser's developer tools, the Network tab shows no request when Submit is pressed.
+  - reload the result page. The reference is the same.
+  - "Change your answers", then Change and Continue without changing anything. The reference is the same.
+  - change an answer, then type `/result`. You are sent to Check your answers. Submit gives a new reference.
+  - Start again, then open `/result`. You are sent to question 1.
+- No `starter/data/` folder or records file exists.

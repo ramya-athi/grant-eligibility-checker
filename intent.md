@@ -16,6 +16,7 @@ When a citizen completes the service, they should:
 - Know the maximum grant amount they may be entitled to.
 - Know the next steps to apply or seek further support.
 - Receive an answer within 2 minutes, without needing to call the contact centre.
+- See a reference number for their check (for example `ELG-131026-7KQ2ZD`).
 
 We will know the service is working through:
 
@@ -81,6 +82,11 @@ Grant amounts and next steps are placeholders for now. The result page gives ind
     - Users understand why they received their result
     - Users can proceed without contacting the call centre
 
+13. Reference number:
+    - When the user submits their answers, the service gives the check a reference number in the format `ELG-ddmmyy-XXXXXX`. That is "ELG", the date of the check, then 6 random letters and numbers.
+    - The reference number is made in the user's browser and only shown to them. Nothing is sent to or stored on a server.
+    - The result page shows the outcome first, then the reference number, then the details of the decision.
+
 ### Eligibility outcomes
 
 **Not Eligible**
@@ -113,6 +119,9 @@ Grant amounts and next steps are placeholders for now. The result page gives ind
 - Payment processing
 - Real grant approval decisions
 - Integration with government systems or databases
+- Storing checks or reference numbers anywhere (no database, no file on the server)
+- Looking up or checking a reference number later
+- Showing the reference number anywhere except the result page (for example in an email or a printable receipt)
 - Property verification checks
 - Land Registry or council data lookups
 - Email or SMS notifications

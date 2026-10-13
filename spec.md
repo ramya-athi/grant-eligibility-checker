@@ -39,7 +39,7 @@ Each requirement can be checked by using the running app in a browser.
 20. If the user reloads the browser part-way through the journey, their answers are still there.
 21. On the Check your answers page, the user sees all five questions with their answers in a summary list, and each row has a Change link.
 22. When the user clicks Change, the matching question opens with the current answer selected. After Continue, the user returns directly to the Check your answers page, not to the next question.
-23. The Check your answers page has a Submit button, which takes the user to the result page.
+23. The Check your answers page has a Submit button. Submit gives the check a reference number (requirements 52 to 58), then takes the user to the result page.
 24. A user who opens a later page (for example the Check your answers page or the result page) before answering the questions is sent back to the first question, and no error page is shown.
 25. Opening any journey page directly by typing its address, or reloading it, shows that page and not a server error.
 
@@ -62,11 +62,11 @@ Each requirement can be checked by using the running app in a browser.
 
 ### Result page
 
-37. The result page shows the outcome (Eligible, Partially Eligible, or Not Eligible) in a prominent panel. The panel is green for Eligible, a different colour for Partially Eligible, and grey for Not Eligible, and the outcome is also stated in words, never by colour alone.
+37. The result page shows the outcome (Eligible, Partially Eligible, or Not Eligible) in a prominent panel. The panel is green for Eligible, a different colour for Partially Eligible, and grey for Not Eligible, and the outcome is also stated in words, never by colour alone. The page content appears in this order: the outcome, then the reference number (requirement 53), then the details of the decision (requirements 38 to 40).
 38. The result page explains in plain language why the user got this result, naming the answers that led to it.
 39. The result page shows an indicative maximum grant amount. This is a placeholder figure and is labelled as indicative.
 40. The result page gives next steps. Eligible and Partially Eligible users see a link to a fictional application service, and Not Eligible users see suggestions for further support.
-41. The result page has a way to start again. Starting again clears all previous answers, including after a reload.
+41. The result page has a way to start again. Starting again clears all previous answers and the reference number, including after a reload.
 
 ### Accessibility, quality and running
 
@@ -80,6 +80,21 @@ Each requirement can be checked by using the running app in a browser.
 49. After the front end is built, a single Python command starts the app, and it is reachable on port 5002 from another machine on the network, not only from localhost.
 50. The first press of Tab on any page focuses a "Skip to main content" link, which appears at the top of the page. Pressing Enter on it moves focus to the main content.
 51. After moving to a new page with Continue, Back or a link, keyboard focus is back at the top of the page, so the next Tab press reaches the skip link again.
+
+### Reference number
+
+52. When the user presses Submit on the Check your answers page, the service creates a reference number in the format `ELG-ddmmyy-XXXXXX`:
+    - `ELG`, then a hyphen
+    - the date of the check in UK time (Europe/London), as a two-digit day, month and year (`ddmmyy`), then a hyphen
+    - 6 random characters, each an upper-case letter or a number, leaving out the look-alike characters 0, O, 1, I and L. That leaves the letters A to Z except I, L and O, and the numbers 2 to 9: 31 possible characters.
+
+    For example, a check made on 13 October 2026 could get `ELG-131026-7KQ2ZD`.
+53. The result page shows the reference number directly after the outcome, inside the outcome panel. It is labelled "Your reference number" and shown in bold, following the GOV.UK confirmation panel pattern. The support label (for example "Heat pump support only") moves out of the panel, and becomes the first line of the details below it.
+54. The reference number is made in the user's browser and is only shown on the result page. It is not sent to the server, and neither the reference nor the answers are stored on a server, in a file or in a database. It cannot be looked up later.
+55. Reloading the result page shows the same reference number. Like the answers (decision 6), it is kept in the browser's session storage until the tab is closed or the user starts again.
+56. If the user changes any answer after submitting (for example with "Change your answers" on the result page), the reference number is cleared, and submitting again gives a new one. Going through a Change link and pressing Continue without changing anything keeps the reference number.
+57. Opening the result page with every question answered but no reference number (for example by typing `/result`, or after changing an answer) sends the user to the Check your answers page, so they must press Submit to get a result.
+58. Every check gets its own random reference number. Because nothing is stored, the service cannot check that a reference has never been used before. With 31⁶ (about 887 million) possible references per day, two checks getting the same one is very unlikely.
 
 ## 2. Decisions
 
@@ -105,6 +120,13 @@ Each requirement can be checked by using the running app in a browser.
 20. **Record AI use in `starter/AI_LOG.md`, replacing its married couple's allowance sample entry:** the starter asks for three or more entries, and the sample is about a different scheme.
 21. **Skip link plus a focus reset on every page change:** a single-page app does not reset keyboard focus like a full page load, so keyboard users would otherwise start from wherever the removed button was.
 22. **Tell the CSS minifier to recover from errors (`css.lightningcss.errorRecovery` in `vite.config.js`):** the installed Vite 8 rejects an old Internet Explorer rule inside govuk-frontend and the build failed without it.
+23. **Make the reference number in the browser and store nothing (`src/reference.js`):** the platform the service runs on can't support saving checks on the server, so the reference is only shown to the user. The Flask server stays as it was: it only serves the built front end.
+24. **Use the browser's `crypto.getRandomValues` for the random part:** it gives unpredictable values, unlike `Math.random`. Values that would make some characters more likely than others are thrown away.
+25. **Work out the date with `Intl.DateTimeFormat` in the Europe/London time zone:** a user's device might be set to another time zone, and UTC would give the wrong date between midnight and 1am during British Summer Time.
+26. **Leave out 0, O, 1, I and L:** these are easy to confuse when a reference is read out or typed, as GOV.UK guidance on reference numbers points out.
+27. **Keep the reference number in session storage next to the answers (`useAnswers`):** reloading the result page then shows the same reference (requirement 55), in the same way decision 6 keeps the answers. It is cleared only when an answer actually changes, or the user starts again.
+28. **Show the reference inside the outcome panel ("Your reference number" plus the reference in bold):** this puts the reference straight after the outcome, as asked, using the GOV.UK confirmation panel pattern.
+29. **Test the generator with Node's built-in test runner (`src/reference.test.js`), like the eligibility rules:** the date and random source can be passed in, so the tests can fix them, and no new test library is needed.
 
 ## 3. Open questions
 
@@ -128,3 +150,5 @@ Each requirement can be checked by using the running app in a browser.
 18. **Intent edit:** "Users understand why they received their result" was removed from the success list but remains under item 12 of In scope. I have kept it as a requirement (38). Is that right?
 19. **Git housekeeping:** `starter/node_modules` is committed to git and there is no `.gitignore`. Should I add a `.gitignore` for `node_modules` and the build folder, and remove `node_modules` from git?
 20. **Where the app lives:** should the app stay in `starter/`, or move to the repository root, with the Python server beside it?
+21. **What the reference is for:** since nothing is stored, the reference can't be looked up or checked by anyone else. Should the result page say so, or suggest the user keeps a note of it (for example with their answers)? I have added no extra text.
+22. **Storing checks later:** if a later phase needs checks to be saved (for example in a file or a database), it will need a server that can write data, and server-side validation of the answers. That was planned and then removed on 13 October 2026, because the platform can't support it.
