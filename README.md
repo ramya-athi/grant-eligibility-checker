@@ -50,3 +50,17 @@ git remote -v
 # Expected
 # origin git@github.com:ramya-athi/grant-eligibility-checker.git (fetch)
 # origin git@github.com:ramya-athi/grant-eligibility-checker.git (push)
+
+# Running the app
+
+```bash
+cd starter
+npm ci            # install dependencies (node_modules is not committed)
+npm run dev       # copies GOV.UK Frontend assets, then serves https://<hostname>:5002
+npm test          # unit, journey and accessibility tests (Vitest)
+npm run build     # production build in starter/dist
+```
+
+- Planning docs: `intent.md` (why and scope), `spec.md` (requirements), `plan.md` (build plan and record).
+- AI usage log: `starter/AI_LOG.md`. Claude Code rules: `starter/CLAUDE.md`.
+- Styling is GOV.UK Frontend 6.5.1. Its GDS Transport font is licensed only for services on gov.uk domains, which is fine for this prototype.
