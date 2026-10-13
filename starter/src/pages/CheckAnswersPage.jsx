@@ -12,7 +12,7 @@ function CheckAnswersPage({ answers }) {
 
   return (
     <>
-      <Link to="/heating" className="govuk-back-link">
+      <Link to="/heating" className="govuk-back-link govuk-!-display-none-print">
         Back
       </Link>
       <h1 className="govuk-heading-l">Check your answers</h1>

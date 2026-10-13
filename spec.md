@@ -62,12 +62,13 @@ Each requirement can be checked by using the running app in a browser.
 
 ### Result page
 
-37. The result page shows the outcome (Eligible, Partially Eligible, or Not Eligible) in a prominent coloured panel with white text: green for Eligible, blue for Partially Eligible, and dark grey for Not Eligible. The outcome is stated in words in the panel, never by colour alone.
+37. The result page shows the outcome in plain words as the main heading, inside the standard green GOV.UK confirmation panel, for every outcome. Under the heading the panel says what the user may be eligible for (for example "You may be eligible for" and then "Heat Pump Support Only"), or "Your support" and "No grant" for Not Eligible. The outcome is stated in words, never by colour alone, so a green panel on a Not Eligible result is not the only signal.
 38. The result page explains in plain language why the user got this result, naming the answers that led to it.
 39. The result page shows an indicative maximum grant amount. This is a placeholder figure and is labelled as indicative.
 40. The result page lists numbered next steps. Eligible and Partially Eligible users are told to go to the fictional application service (a link), to print the page to keep a record, and to change their answers if any is wrong. Not Eligible users are told to change their answers if any is wrong, read the help page, and contact the service if their situation changes.
 41. The result page has a way to start again. Starting again clears all previous answers, including after a reload.
-52. The result page has a "Print this page" link. Selecting it opens the browser's print dialog. The printed page shows the outcome in a bordered box (not white text on a missing background), the reasons, the amount and next steps, and leaves out the header bar, banners, back link, footer, buttons and the print link itself.
+52. The result page has a "Print this page" link. Selecting it opens the browser's print dialog. The printed page shows the outcome, the reasons, the amount and next steps, and leaves out the header bar, banners, back link, footer, buttons and the print link itself.
+53. The Accessibility statement, Privacy, Cookies, Terms and conditions, Help, Contact and application placeholder pages each have a Back link at the top. It returns to the page the user came from (for example the question they were on, with their answers kept). If the page was opened directly, it goes to the start page. It works with the keyboard.
 
 ### Accessibility, quality and running
 
@@ -95,7 +96,7 @@ Each requirement can be checked by using the running app in a browser.
 9. **Question wording and options are replaced with those in the intent:** the starter's income bands (31,000 and 50,000), five insulation choices (including "I do not know"), and heating and housing options do not match the grant rules.
 10. **Remove the extra `<main>` elements inside the starter's pages, keeping the one in `App.jsx`:** nested main landmarks harm screen reader users, and the Accessibility statement page has one too.
 11. **Mount the phase banner and footer as the starter's TODOs say, rebuild them and the header with GOV.UK Frontend's markup, and add a cookie banner component:** the starter had no cookie banner and only one footer link.
-12. **Use the official `govuk-frontend` package, compiled with Sass in `src/app.scss`, with Arial instead of GDS Transport, plus a small `src/custom.css`:** this gives genuine GOV.UK components instead of hand-written look-alike CSS, and GDS Transport may only be used on service.gov.uk.
+12. **Use the official `govuk-frontend` package, compiled with Sass in `src/app.scss`, with Arial instead of GDS Transport, and no custom CSS:** this gives genuine GOV.UK components instead of hand-written look-alike CSS, and GDS Transport may only be used on service.gov.uk. `app.scss` contains only the library import and its two settings.
 13. **One placeholder grant amount per outcome, held in one module:** the intent says amounts are placeholders, so they are easy to replace later.
 14. **The "Other" heating text box appears and disappears in the front end only:** the app needs scripts to run at all, so a no-script fallback adds nothing.
 15. **Required-field validation only, shown as a GOV.UK error summary plus an inline message:** the user asked for errors that look like the GOV.UK Design System; advanced validation stays in Phase 2.
@@ -106,8 +107,10 @@ Each requirement can be checked by using the running app in a browser.
 20. **Record AI use in `starter/AI_LOG.md`, replacing its married couple's allowance sample entry:** the starter asks for three or more entries, and the sample is about a different scheme.
 21. **Skip link plus a focus reset on every page change:** a single-page app does not reset keyboard focus like a full page load, so keyboard users would otherwise start from wherever the removed button was.
 22. **Tell the CSS minifier to recover from errors (`css.lightningcss.errorRecovery` in `vite.config.js`):** the installed Vite 8 rejects an old Internet Explorer rule inside govuk-frontend and the build failed without it.
-23. **Result panel uses the library's `govuk-panel--confirmation` class for every outcome, with colour variants in `custom.css`, and a print link that calls `window.print()`:** without that class the panel had no background, and GOV.UK's print guidance is a plain "Print this page" link that is hidden when printing.
+23. **Every outcome uses the library's confirmation panel as it is, and the print link calls `window.print()`:** the user asked for no custom CSS, and the library's panel is green only. The heading and the "You may be eligible for" or "Your support" line carry the meaning in words. Print layout comes from the library's own print styles plus its `govuk-!-display-none-print` class.
 24. **Each outcome carries its own plain-English summary sentence, written in `eligibility.js` next to the rules:** the wording stays with the rule that produces it, so the two cannot drift apart, and tests check every combination has one.
+25. **An automated accessibility scan (`npm run a11y`) uses axe-core through Playwright and covers every page and state at two widths:** it gives repeatable evidence for the WCAG 2.2 AA requirement, and it exits with an error on any violation so it can run in CI.
+26. **A Back link on the footer pages that uses the browser history, falling back to the start page:** the GOV.UK Back link pattern returns users to the page they came from, which fits pages reachable from anywhere, and a plain "Home" link would drop the user's place in the journey. The service name in the header already links to the start page.
 
 ## 3. Open questions
 

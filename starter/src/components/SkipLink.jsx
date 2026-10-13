@@ -10,7 +10,7 @@ export default function SkipLink() {
   }
 
   return (
-    <a href="#main-content" className="govuk-skip-link" data-module="govuk-skip-link" onClick={skip}>
+    <a href="#main-content" className="govuk-skip-link govuk-!-display-none-print" data-module="govuk-skip-link" onClick={skip}>
       Skip to main content
     </a>
   );

@@ -1,3 +1,4 @@
+import PageBackLink from '../components/PageBackLink';
 import usePageTitle from '../hooks/usePageTitle';
 
 export default function AccessibilityStatementPage() {
@@ -5,6 +6,7 @@ export default function AccessibilityStatementPage() {
 
   return (
     <>
+      <PageBackLink />
       <h1 className="govuk-heading-l">Accessibility statement</h1>
       <p className="govuk-body">
         This statement applies to the Green Home Grant eligibility checker, a prototype for a fictional scheme. We want as many people as possible to be able to use it.

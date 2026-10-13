@@ -13,7 +13,7 @@ function GovukHeader() {
           </div>
         </div>
       </header>
-      <section aria-label="Service information" className="govuk-service-navigation">
+      <section aria-label="Service information" className="govuk-service-navigation govuk-!-display-none-print">
         <div className="govuk-width-container">
           <div className="govuk-service-navigation__container">
             <span className="govuk-service-navigation__service-name">

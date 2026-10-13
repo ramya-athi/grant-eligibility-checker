@@ -10,10 +10,11 @@ const HEADINGS = {
   'not-eligible': 'You are not eligible',
 };
 
-const PANEL_CLASS = {
-  eligible: 'govuk-panel--confirmation',
-  partial: 'govuk-panel--confirmation govuk-panel--partial',
-  'not-eligible': 'govuk-panel--confirmation govuk-panel--not-eligible',
+// The line above the support name in the panel: what the user may be eligible for.
+const PANEL_LABEL = {
+  eligible: 'You may be eligible for',
+  partial: 'You may be eligible for',
+  'not-eligible': 'Your support',
 };
 
 function ResultPage({ answers, resetAnswers }) {
@@ -39,10 +40,10 @@ function ResultPage({ answers, resetAnswers }) {
 
   return (
     <>
-      <div className={`govuk-panel ${PANEL_CLASS[result.outcome]}`}>
+      <div className="govuk-panel govuk-panel--confirmation">
         <h1 className="govuk-panel__title">{HEADINGS[result.outcome]}</h1>
         <div className="govuk-panel__body">
-          Your support
+          {PANEL_LABEL[result.outcome]}
           <br />
           <strong>{result.support}</strong>
         </div>

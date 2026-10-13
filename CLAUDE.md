@@ -12,6 +12,7 @@ npm install
 npm run build                  # must run before the server; also after any front-end change
 python3 server.py              # serves dist/ on 0.0.0.0:5002; PORT=5000 python3 server.py for another port
 npm test                       # node --test src/*.test.js (no lint or type-check is configured)
+npm run a11y                   # axe scan of every page and state; needs the server running and `npx playwright install chromium` once
 node --test --test-name-pattern="flats" src/eligibility.test.js   # one test
 ```
 
@@ -29,7 +30,7 @@ On the lab VM the proxy maps `app<N>-lab11133.labs.decoded.com` to port `500<N>`
 - **State:** `useAnswers` (in `App.jsx`) holds answers in React state and mirrors them to `sessionStorage`, so Back links, reloads and the Change flow keep them. The five question pages are thin wrappers around `components/RadioQuestion.jsx`.
 - **Change flow:** Change links go to `<question path>?change=1`; `RadioQuestion` then returns to `/check-answers` instead of the next question.
 - **Focus and errors:** `App.jsx` resets keyboard focus to a top element on every route change so the skip link is the first Tab stop. Validation shows a GOV.UK error summary (`ErrorSummary.jsx`) plus an inline message; the heating "Other" option needs its free-text box filled.
-- **Styling:** `src/app.scss` pulls in the official `govuk-frontend` with Arial instead of GDS Transport; `src/custom.css` holds only the Partially Eligible and Not Eligible panel colours. Components use GOV.UK markup classes directly.
+- **Styling:** only `src/app.scss`, which imports the official `govuk-frontend` with Arial instead of GDS Transport and contains nothing else. There is no custom CSS, so use library components and utility classes (for example `govuk-!-display-none-print` to hide something when printing, and `govuk-skip-link-focused-element` on elements that code focuses). The result panel is the library's green confirmation panel for every outcome, so the outcome is carried by the wording.
 
 ## Gotchas
 

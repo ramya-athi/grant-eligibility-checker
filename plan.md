@@ -26,7 +26,7 @@ Files:
 - `src/components/GovukHeader.jsx`: use a router link so the header link doesn't reload.
 - new `src/pages/StaticPage.jsx` (one reusable page for Privacy, Cookies, Terms, Help, Contact with short placeholder text) and new `src/pages/NotFoundPage.jsx`.
 - `src/pages/AccessibilityStatementPage.jsx`: remove its nested `<main>` and fill every TODO heading with real sentences.
-- `src/app.scss` (GOV.UK Frontend via Sass, Arial font) and `src/custom.css` (Partially Eligible and Not Eligible panel colours) replace the starter's `src/App.css`; `package.json` gains `govuk-frontend` and `sass`.
+- `src/app.scss` (GOV.UK Frontend via Sass, Arial font, no custom CSS) replaces the starter's `src/App.css`; `package.json` gains `govuk-frontend` and `sass`.
 
 Check: `npm run dev`, open the app. Header, "alpha" banner, cookie banner and footer show on every page. Each footer link opens a page, a made-up address shows "Page not found", and the cookie banner stays hidden after Accept and a reload. Inspecting any page shows one `<main>`.
 

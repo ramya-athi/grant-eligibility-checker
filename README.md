@@ -70,6 +70,34 @@ npm test
 
 This runs the eligibility rules against named cases and all 1,568 possible combinations of answers.
 
+### Accessibility scan
+
+An automated scan checks every page and state against WCAG 2.0 to 2.2 levels A and AA, using [axe-core](https://github.com/dequelabs/axe-core) in a headless browser. It covers all five questions, the error states, the "Other" heating option, check your answers, all three results, the footer pages and the not found page, and repeats four pages at 320px wide.
+
+```
+cd starter
+npx playwright install chromium    # first time only
+python3 server.py                  # in another terminal, with the app built
+npm run a11y
+```
+
+It prints each page with its violations and exits with an error if any are found. Set `BASE_URL` to scan another address.
+
+## How this meets the rubric
+
+The hackathon rubric has six rows. This is where to find the evidence for each.
+
+| Rubric row | Where to look |
+|------------|---------------|
+| Functionality | The journey from start page, through five questions, to check your answers and the result. Rules in `starter/src/eligibility.js`. `npm test` runs 8 tests, including every one of the 1,568 answer combinations. The `check-eligibility` skill runs 26 named scenarios. |
+| Code quality | One source for the questions (`questions.js`), pure and tested rules, small components, decisions written down in [`spec.md`](spec.md), and [`CLAUDE.md`](CLAUDE.md) describing how it fits together. |
+| AI effectiveness | [`starter/AI_LOG.md`](starter/AI_LOG.md) records each use of AI with what was generated and what was changed and why. [`intent.md`](intent.md), [`spec.md`](spec.md) and [`plan.md`](plan.md) show the planning, and two Claude Code skills in `.claude/skills/` explain and check the rules. |
+| Accessibility | Skip link, visible focus, labelled inputs, GOV.UK error summary, keyboard focus reset on each page, and an accessibility statement. `npm run a11y` runs axe on 26 scans. [`starter/AUDIT_LOG.md`](starter/AUDIT_LOG.md) records the before and after of the tests, Lighthouse, keyboard and 375px checks. |
+| GOV.UK visual compliance | The official `govuk-frontend` package (Arial instead of GDS Transport): header, service name, phase banner, radios, error summary, summary list, confirmation panel, warning text, button and footer. The result page has a print link. |
+| Service Standard conformance | A phase banner with a feedback link, a footer with a link to the accessibility statement, an accessibility statement page, and a cookie banner. |
+
+The Lighthouse, keyboard and 375px results in `AUDIT_LOG.md` were measured by hand. The accessibility scan and the tests can be rerun with the commands above.
+
 ## Project layout
 
 ```
@@ -84,9 +112,10 @@ starter/
     pages/            One component per page
     components/       Shared components (header, footer, cookie banner, radio question)
     hooks/            Answer storage and page titles
-    app.scss          GOV.UK Frontend styles (Arial font)
-    custom.css        Result panel colours
+    app.scss          GOV.UK Frontend import (Arial font), the only stylesheet and no custom CSS
+  scripts/            Accessibility scan (axe) that checks every page
   AI_LOG.md           Record of where AI was used and what was changed
+  AUDIT_LOG.md        Before and after checks: tests, Lighthouse, keyboard, 375px, accessibility scan
 .claude/skills/       Claude Code skill that explains and checks the eligibility rules
 ```
 

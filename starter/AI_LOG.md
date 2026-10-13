@@ -157,3 +157,57 @@ Document **3+ entries** in your AI_LOG covering **3-5 distinct patterns** from t
 | **Task** | Make the result panel use the GOV.UK confirmation panel markup, and explain the lightningcss build error |
 | **What AI Generated** | The panel in `ResultPage.jsx` now follows the Design System example exactly: a `govuk-panel` with the title in `govuk-panel__title` and a `govuk-panel__body` of "Your support", a line break, then the support name in `<strong>`. Removed the extra margin utility class I had added. |
 | **What You Changed + Why** | Kept the two outcome colour classes (`govuk-panel--partial` and `govuk-panel--not-eligible`) on top of `govuk-panel--confirmation`. Without them Not Eligible and Partially Eligible would show a green success panel, which is misleading, and the colour is also in the starter's own TODO for this page. I read the instruction to remove classes as the extra ones only, so check that is what was meant. Updated my browser test to read the bold support text, and updated spec.md requirement 33. All browser checks pass. On the build error: it comes from an Internet Explorer media query (`min-width: 0\0`) inside govuk-frontend, which Vite 8's CSS minifier (lightningcss) rejects. `css.lightningcss.errorRecovery: true` in vite.config.js tells it to skip that rule, and that setting is already on origin/main. |
+
+## Instance 18: Test generation: automated accessibility scan with axe
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Add an automated accessibility scan (Pa11y or axe) that covers every page, and record the result |
+| **What AI Generated** | `starter/scripts/a11y-scan.mjs`, run with `npm run a11y`. It uses axe-core through Playwright with the WCAG 2.0 to 2.2 A and AA rules, and scans 22 pages and states at 1000px (start with and without the cookie banner, all five questions, both error states, the "Other" heating reveal, check your answers, three results, the footer pages and the not found page) plus 4 pages at 320px. Added `playwright` and `@axe-core/playwright` as dev dependencies. |
+| **What You Changed + Why** | Chose axe over Pa11y because it was quicker to run with the Playwright browser already in use and reports the failing elements. Result: 0 violations in all 26 scans. A clean result proves nothing if the scanner is blind, so I checked it: on the privacy page I injected an image with no alt text, an unlabelled input and faint grey text, and axe reported image-alt, label and color-contrast. That test file was deleted. Also checked that the "Other" text box was really visible when its state was scanned. Limits: axe finds roughly a third of accessibility problems, so it does not replace keyboard and screen reader testing, and it cannot judge things like whether the wording makes sense. Added the result to AUDIT_LOG.md, a decision 25 to spec.md, and the command to CLAUDE.md and the README. |
+
+## Instance 19: Documentation: rubric map in the README
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Add the rubric rows to the README, showing where the evidence for each is |
+| **What AI Generated** | A "How this meets the rubric" table in `README.md` with the six rows named in the handbook (functionality, code quality, AI effectiveness, accessibility, GOV.UK visual compliance, Service Standard conformance), each pointing to files and commands. Also added the accessibility scan to the README and the project layout. |
+| **What You Changed + Why** | The brief with the rubric's full wording is not in this repository, so the table uses only the six row names from the handbook and does not claim to quote the "Excellent" column. Kept every claim to something that exists and can be checked (test counts, scan counts, file names), and said in the README that the Lighthouse, keyboard and 375px figures were measured by hand and are not rerunnable. You should compare the table with the real rubric wording before you submit. |
+
+## Instance 20: Feature: Back link on the footer pages
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Users could not get back from the accessibility statement, help and other footer pages. Add a home link or Back link in the GOV.UK style |
+| **What AI Generated** | A `PageBackLink` component using the GOV.UK Back link pattern, added to the five footer pages, the accessibility statement and the application placeholder page. |
+| **What You Changed + Why** | Chose a Back link over a Home link because GOV.UK guidance returns users to the page they came from, so someone who opens Help from question 2 lands back on question 2 with their answer kept. A page opened directly (nothing to go back to) sends the user to the start page instead of doing nothing; the code tells the two cases apart with the router's `location.key`. Tested every footer page from the start page, from the middle of the journey, opened directly, and with the keyboard (Enter), and all passed. Reran the earlier browser checks, the 26 accessibility scans (0 violations) and the 8 unit tests. Updated spec.md requirement 53 and decision 26. Not tested: a screen reader. |
+
+## Instance 21: Refactor: remove custom.css and use only GOV.UK Frontend
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Remove `custom.css` and use only the classes in `govuk-frontend` |
+| **What AI Generated** | Deleted `src/custom.css` and its import. It had held four things: blue and grey colours for the result panel, a focus-ring rule for elements that code focuses, print rules, and a margin for the footer note. Replaced them with the library's own classes: `govuk-skip-link-focused-element` for the focus ring, `govuk-!-display-none-print` on the skip link, cookie banner, phase banner, service name bar, Back links and footer for printing, and `govuk-!-margin-top-4` on the footer note. |
+| **What You Changed + Why** | The one thing the library cannot do is colour the panel: it is always green, so a Not Eligible result in a green success panel would mislead. Changed the design instead of adding CSS: Eligible keeps the green confirmation panel, and Partially Eligible and Not Eligible show a heading followed by the library's blue notification banner headed "Your support". The print view needed no custom rules, because the library's own print styles draw the panel with a black border. Tested by rerunning the browser checks (all pass), keyboard focus order (skip link is still the first Tab stop and focus resets after each page change), the Back link tests, the 26 accessibility scans (0 violations), the 8 unit tests, and a print-media screenshot. Updated spec.md requirement 37, decisions 12 and 23, plan.md, README and CLAUDE.md. Not tested: a real printer, and the notification banner with a screen reader. |
+
+## Instance 22: Design: coloured result panels and what the user is eligible for
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Result page: green panel for Eligible, blue for Partially Eligible, grey for Not Eligible, and show in the panel what a partially eligible user is eligible for |
+| **What AI Generated** | All three outcomes now use the GOV.UK confirmation panel again (replacing the notification banner from instance 21). The panel body reads "You may be eligible for" and then the support in bold, for example "Heat Pump Support Only" or "Insulation Support Only", and "Your support" with "No grant" for Not Eligible. Two lines at the end of `app.scss` recolour the panel. |
+| **What You Changed + Why** | This partly reverses the instruction to use no custom CSS, because the library has no blue or grey panel. I kept it as small as possible: the panel's background is `var(--govuk-success-colour)`, so the two rules only point that variable at the library's own `--govuk-brand-colour` (blue, rgb 29, 112, 184) and `--govuk-secondary-text-colour` (grey, rgb 72, 73, 73), with no colour values of my own. Checked the colours in the browser, and that white text on both passes the accessibility scan (26 scans, 0 violations). Reran the browser checks, Back link tests and 8 unit tests, and all pass. For flats and for insulated homes with other heating, the intent does not say what the support covers, so the panel just says "Reduced support" and I did not invent more. Updated spec.md requirement 37 and decisions 12 and 23, plus plan.md, README and CLAUDE.md. |
+
+## Instance 23: Refactor: remove the last custom CSS, green panel for every outcome
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Remove the two panel colour rules and make the result panel green |
+| **What AI Generated** | Deleted the two rules at the end of `app.scss`, so it now holds only the `govuk-frontend` import and its two settings. Removed the blue and grey panel classes from `ResultPage.jsx`, so every outcome uses `govuk-panel govuk-panel--confirmation`. |
+| **What You Changed + Why** | The user chose no custom CSS over colour-coded panels. The cost is that a Not Eligible result now appears in a green success panel, which could be read as good news at a glance. To reduce that risk without CSS, the wording does the work: the heading says "You are not eligible", and the line in the panel says "Your support" and "No grant" instead of "You may be eligible for". Checked in the browser that all three panels are green (rgb 15, 122, 82) with white text. Reran the browser checks, Back link tests, 26 accessibility scans (0 violations) and 8 unit tests, and all pass. Updated spec.md requirement 37 and decisions 12 and 23, plus plan.md, README and CLAUDE.md. If a reviewer raises the green Not Eligible panel, this log entry explains the choice. |

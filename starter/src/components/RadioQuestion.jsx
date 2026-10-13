@@ -54,7 +54,7 @@ export default function RadioQuestion({ index, answers, setAnswer }) {
 
   return (
     <>
-      <Link to={backTo} className="govuk-back-link">
+      <Link to={backTo} className="govuk-back-link govuk-!-display-none-print">
         Back
       </Link>
       {summaryErrors.length > 0 && <ErrorSummary errors={summaryErrors} />}
