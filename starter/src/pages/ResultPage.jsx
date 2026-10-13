@@ -17,13 +17,15 @@ const PANEL_LABEL = {
   'not-eligible': 'Your support',
 };
 
-function ResultPage({ answers, resetAnswers }) {
+function ResultPage({ answers, reference, resetAnswers }) {
   const navigate = useNavigate();
   const missing = firstMissingPath(answers);
   const result = missing ? null : checkEligibility(answers);
   usePageTitle(result ? HEADINGS[result.outcome] : 'Result');
 
   if (missing) return <Navigate to="/ownership" replace />;
+  // Answered but not submitted (or changed since): Submit must create the reference first (spec 59)
+  if (!reference) return <Navigate to="/check-answers" replace />;
 
   const amount = `£${result.amount.toLocaleString('en-GB')}`;
   const canApply = result.outcome !== 'not-eligible';
@@ -40,16 +42,18 @@ function ResultPage({ answers, resetAnswers }) {
 
   return (
     <>
+      {/* Outcome first, then the reference number, then the details of the decision (spec 37, 55) */}
       <div className="govuk-panel govuk-panel--confirmation">
         <h1 className="govuk-panel__title">{HEADINGS[result.outcome]}</h1>
         <div className="govuk-panel__body">
           {PANEL_LABEL[result.outcome]}
           <br />
           <strong>{result.support}</strong>
+          <p>Your reference number - <strong>{reference}</strong></p>
         </div>
       </div>
 
-      <p className="govuk-body-l">{result.summary}</p>
+      <p className="govuk-body">{result.summary}</p>
 
       <div className="govuk-warning-text">
         <span className="govuk-warning-text__icon" aria-hidden="true">

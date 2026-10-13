@@ -39,7 +39,7 @@ Each requirement can be checked by using the running app in a browser.
 20. If the user reloads the browser part-way through the journey, their answers are still there.
 21. On the Check your answers page, the user sees all five questions with their answers in a summary list, and each row has a Change link.
 22. When the user clicks Change, the matching question opens with the current answer selected. After Continue, the user returns directly to the Check your answers page, not to the next question.
-23. The Check your answers page has a Submit button, which takes the user to the result page.
+23. The Check your answers page has a Submit button. Submit gives the check a reference number (requirements 54 to 60), then takes the user to the result page.
 24. A user who opens a later page (for example the Check your answers page or the result page) before answering the questions is sent back to the first question, and no error page is shown.
 25. Opening any journey page directly by typing its address, or reloading it, shows that page and not a server error.
 
@@ -62,14 +62,13 @@ Each requirement can be checked by using the running app in a browser.
 
 ### Result page
 
-37. The result page shows the outcome in plain words as the main heading, inside the standard green GOV.UK confirmation panel, for every outcome. Under the heading the panel says what the user may be eligible for (for example "You may be eligible for" and then "Heat Pump Support Only"), or "Your support" and "No grant" for Not Eligible. The outcome is stated in words, never by colour alone, so a green panel on a Not Eligible result is not the only signal.
+37. The result page shows the outcome in plain words as the main heading, inside the standard green GOV.UK confirmation panel, for every outcome. Under the heading the panel says what the user may be eligible for (for example "You may be eligible for" and then "Heat Pump Support Only"), or "Your support" and "No grant" for Not Eligible. The outcome is stated in words, never by colour alone, so a green panel on a Not Eligible result is not the only signal. The page content appears in this order: the outcome, then the reference number (requirement 55), then the details of the decision (requirements 38 to 40).
 38. The result page explains in plain language why the user got this result, naming the answers that led to it.
 39. The result page shows an indicative maximum grant amount. This is a placeholder figure and is labelled as indicative.
 40. The result page lists numbered next steps. Eligible and Partially Eligible users are told to go to the fictional application service (a link), to print the page to keep a record, and to change their answers if any is wrong. Not Eligible users are told to change their answers if any is wrong, read the help page, and contact the service if their situation changes.
-41. The result page has a way to start again. Starting again clears all previous answers, including after a reload.
+41. The result page has a way to start again. Starting again clears all previous answers and the reference number, including after a reload.
 52. The result page has a "Print this page" link. Selecting it opens the browser's print dialog. The printed page shows the outcome, the reasons, the amount and next steps, and leaves out the header bar, banners, back link, footer, buttons and the print link itself.
 53. The Accessibility statement, Privacy, Cookies, Terms and conditions, Help, Contact and application placeholder pages each have a Back link at the top. It returns to the page the user came from (for example the question they were on, with their answers kept). If the page was opened directly, it goes to the start page. It works with the keyboard.
-54. The service sets no cookies, sends no `Set-Cookie` header and makes no requests to other sites. Answers are kept in session storage only. The cookie choice is kept in local storage with an expiry date one year ahead, an expired or unreadable value is ignored and removed, and a value saved by an earlier version is kept and given an expiry. The Cookies page says all of this and lists both stored items, what they are for and how long they are kept, in a table. `npm run cookies` and `npm test` check it.
 
 ### Accessibility, quality and running
 
@@ -83,6 +82,22 @@ Each requirement can be checked by using the running app in a browser.
 49. After the front end is built, a single Python command starts the app, and it is reachable on port 5002 from another machine on the network, not only from localhost.
 50. The first press of Tab on any page focuses a "Skip to main content" link, which appears at the top of the page. Pressing Enter on it moves focus to the main content.
 51. After moving to a new page with Continue, Back or a link, keyboard focus is back at the top of the page, so the next Tab press reaches the skip link again.
+61. The service sets no cookies, sends no `Set-Cookie` header and makes no requests to other sites. Answers are kept in session storage only. The cookie choice is kept in local storage with an expiry date one year ahead, an expired or unreadable value is ignored and removed, and a value saved by an earlier version is kept and given an expiry. The Cookies page says all of this and lists both stored items, what they are for and how long they are kept, in a table. `npm run cookies` and `npm test` check it.
+
+### Reference number
+
+54. When the user presses Submit on the Check your answers page, the service creates a reference number in the format `ELG-ddmmyy-XXXXXX`:
+    - `ELG`, then a hyphen
+    - the date of the check in UK time (Europe/London), as a two-digit day, month and year (`ddmmyy`), then a hyphen
+    - 6 random characters, each an upper-case letter or a number, leaving out the look-alike characters 0, O, 1, I and L. That leaves the letters A to Z except I, L and O, and the numbers 2 to 9: 31 possible characters.
+
+    For example, a check made on 13 October 2026 could get `ELG-131026-7KQ2ZD`.
+55. The result page shows the reference number inside the outcome panel, after the outcome heading and the support line (for example "You may be eligible for Heat Pump Support Only"), as "Your reference number - " followed by the reference in bold. The details of the decision follow below the panel.
+56. The reference number is made in the user's browser and is only shown on the result page. It is not sent to the server, and neither the reference nor the answers are stored on a server, in a file or in a database. It cannot be looked up later.
+57. Reloading the result page shows the same reference number. Like the answers (decision 6), it is kept in the browser's session storage until the tab is closed or the user starts again.
+58. If the user changes any answer after submitting (for example with "Change your answers" on the result page), the reference number is cleared, and submitting again gives a new one. Going through a Change link and pressing Continue without changing anything keeps the reference number.
+59. Opening the result page with every question answered but no reference number (for example by typing `/result`, or after changing an answer) sends the user to the Check your answers page, so they must press Submit to get a result.
+60. Every check gets its own random reference number. Because nothing is stored, the service cannot check that a reference has never been used before. With 31⁶ (about 887 million) possible references per day, two checks getting the same one is very unlikely.
 
 ## 2. Decisions
 
@@ -112,7 +127,14 @@ Each requirement can be checked by using the running app in a browser.
 24. **Each outcome carries its own plain-English summary sentence, written in `eligibility.js` next to the rules:** the wording stays with the rule that produces it, so the two cannot drift apart, and tests check every combination has one.
 25. **An automated accessibility scan (`npm run a11y`) uses axe-core through Playwright and covers every page and state at two widths:** it gives repeatable evidence for the WCAG 2.2 AA requirement, and it exits with an error on any violation so it can run in CI.
 26. **A Back link on the footer pages that uses the browser history, falling back to the start page:** the GOV.UK Back link pattern returns users to the page they came from, which fits pages reachable from anywhere, and a plain "Home" link would drop the user's place in the journey. The service name in the header already links to the start page.
-27. **The cookie choice is stored as JSON with an expiry date in `src/cookieChoice.js`, which takes the storage object as a parameter:** one year matches GOV.UK services, and passing the storage in lets unit tests cover expiry, tampering and blocked storage without a browser. The banner and Cookies page wording says "browser storage" because the service sets no real cookies.
+27. **Make the reference number in the browser and store nothing (`src/reference.js`):** the platform the service runs on can't support saving checks on the server, so the reference is only shown to the user. The Flask server stays as it was: it only serves the built front end.
+28. **Use the browser's `crypto.getRandomValues` for the random part:** it gives unpredictable values, unlike `Math.random`. Values that would make some characters more likely than others are thrown away.
+29. **Work out the date with `Intl.DateTimeFormat` in the Europe/London time zone:** a user's device might be set to another time zone, and UTC would give the wrong date between midnight and 1am during British Summer Time.
+30. **Leave out 0, O, 1, I and L:** these are easy to confuse when a reference is read out or typed, as GOV.UK guidance on reference numbers points out.
+31. **Keep the reference number in session storage next to the answers (`useAnswers`):** reloading the result page then shows the same reference (requirement 57), in the same way decision 6 keeps the answers. It is cleared only when an answer actually changes, or the user starts again.
+32. **Show the reference inside the outcome panel, after the support line, as "Your reference number - " followed by the reference in bold:** this keeps the reference with the outcome, as asked, inside the GOV.UK confirmation panel.
+33. **Test the generator with Node's built-in test runner (`src/reference.test.js`), like the eligibility rules:** the date and random source can be passed in, so the tests can fix them, and no new test library is needed.
+34. **The cookie choice is stored as JSON with an expiry date in `src/cookieChoice.js`, which takes the storage object as a parameter:** one year matches GOV.UK services, and passing the storage in lets unit tests cover expiry, tampering and blocked storage without a browser. The banner and Cookies page wording says "browser storage" because the service sets no real cookies.
 
 ## 3. Open questions
 
@@ -136,3 +158,5 @@ Each requirement can be checked by using the running app in a browser.
 18. **Intent edit:** "Users understand why they received their result" was removed from the success list but remains under item 12 of In scope. I have kept it as a requirement (38). Is that right?
 19. **Git housekeeping:** `starter/node_modules` is committed to git and there is no `.gitignore`. Should I add a `.gitignore` for `node_modules` and the build folder, and remove `node_modules` from git?
 20. **Where the app lives:** should the app stay in `starter/`, or move to the repository root, with the Python server beside it?
+21. **What the reference is for:** since nothing is stored, the reference can't be looked up or checked by anyone else. Should the result page say so, or suggest the user keeps a note of it (for example with their answers)? I have added no extra text.
+22. **Storing checks later:** if a later phase needs checks to be saved (for example in a file or a database), it will need a server that can write data, and server-side validation of the answers. That was planned and then removed on 13 October 2026, because the platform can't support it.

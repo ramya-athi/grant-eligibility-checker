@@ -8,6 +8,9 @@ import AxeBuilder from '@axe-core/playwright';
 const BASE = process.env.BASE_URL || 'http://localhost:5002';
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 const ANSWERS_KEY = 'green-home-grant-answers';
+// The result page needs a reference number (spec 59), otherwise it redirects to Check your answers
+const REFERENCE_KEY = 'green-home-grant-reference';
+const SAMPLE_REFERENCE = 'ELG-131026-7KQ2ZD';
 const COOKIE_KEY = 'green-home-grant-cookie-choice';
 
 const ELIGIBLE = { ownership: 'own', income: 'under-20k', propertyType: 'detached', insulation: 'no', heating: 'gas' };
@@ -70,6 +73,9 @@ async function scan(browser, entry, width) {
   if (entry.answers) {
     await page.goto(BASE + '/');
     await page.evaluate(([k, v]) => sessionStorage.setItem(k, v), [ANSWERS_KEY, JSON.stringify(entry.answers)]);
+    if (entry.path === '/result') {
+      await page.evaluate(([k, v]) => sessionStorage.setItem(k, v), [REFERENCE_KEY, JSON.stringify(SAMPLE_REFERENCE)]);
+    }
   }
   await page.goto(BASE + entry.path);
   await page.waitForSelector('h1');
