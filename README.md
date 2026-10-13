@@ -93,7 +93,7 @@ The hackathon rubric has six rows. This is where to find the evidence for each.
 
 | Rubric row | Where to look |
 |------------|---------------|
-| Functionality | The journey from start page, through five questions, to check your answers and the result. Rules in `starter/src/eligibility.js`. `npm test` runs 14 tests, including every one of the 1,568 answer combinations and the cookie choice expiry. The `check-eligibility` skill runs 26 named scenarios. |
+| Functionality | The journey from start page, through five questions, to check your answers and the result. Rules in `starter/src/eligibility.js`. `npm test` runs 19 tests, including every one of the 1,568 answer combinations, the cookie choice expiry and the reference number generator. The `check-eligibility` skill runs 26 named scenarios. |
 | Code quality | One source for the questions (`questions.js`), pure and tested rules, small components, decisions written down in [`spec.md`](spec.md), and [`CLAUDE.md`](CLAUDE.md) describing how it fits together. |
 | AI effectiveness | [`starter/AI_LOG.md`](starter/AI_LOG.md) records each use of AI with what was generated and what was changed and why. [`intent.md`](intent.md), [`spec.md`](spec.md) and [`plan.md`](plan.md) show the planning, and two Claude Code skills in `.claude/skills/` explain and check the rules. |
 | Accessibility | Skip link, visible focus, labelled inputs, GOV.UK error summary, keyboard focus reset on each page, and an accessibility statement. `npm run a11y` runs axe on 26 scans. [`starter/AUDIT_LOG.md`](starter/AUDIT_LOG.md) records the before and after of the tests, Lighthouse, keyboard and 375px checks. |

@@ -82,7 +82,7 @@ Each requirement can be checked by using the running app in a browser.
 49. After the front end is built, a single Python command starts the app, and it is reachable on port 5002 from another machine on the network, not only from localhost.
 50. The first press of Tab on any page focuses a "Skip to main content" link, which appears at the top of the page. Pressing Enter on it moves focus to the main content.
 51. After moving to a new page with Continue, Back or a link, keyboard focus is back at the top of the page, so the next Tab press reaches the skip link again.
-61. The service sets no cookies, sends no `Set-Cookie` header and makes no requests to other sites. Answers are kept in session storage only. The cookie choice is kept in local storage with an expiry date one year ahead, an expired or unreadable value is ignored and removed, and a value saved by an earlier version is kept and given an expiry. The Cookies page says all of this and lists both stored items, what they are for and how long they are kept, in a table. `npm run cookies` and `npm test` check it.
+61. The service sets no cookies, sends no `Set-Cookie` header and makes no requests to other sites. Answers are kept in session storage only. The cookie choice is kept in local storage with an expiry date one year ahead, an expired or unreadable value is ignored and removed, and a value saved by an earlier version is kept and given an expiry. The Cookies page says all of this and lists every stored item (the answers, the reference number and the cookie choice), what each is for and how long it is kept, in a table. `npm run cookies` and `npm test` check it.
 
 ### Reference number
 

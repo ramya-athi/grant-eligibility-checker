@@ -7,6 +7,7 @@ import { chromium } from 'playwright';
 const BASE = process.env.BASE_URL || 'http://localhost:5002';
 const COOKIE_KEY = 'green-home-grant-cookie-choice';
 const ANSWERS_KEY = 'green-home-grant-answers';
+const REFERENCE_KEY = 'green-home-grant-reference';
 
 let failures = 0;
 function check(pass, message) {
@@ -154,7 +155,7 @@ async function visitWithStoredValue(value) {
   const { context, page } = await freshPage('/cookies');
   const text = await page.locator('main').innerText();
   check(/does not set any cookies/i.test(text), 'The cookies page says the service sets no cookies');
-  check(text.includes(COOKIE_KEY) && text.includes(ANSWERS_KEY), 'The cookies page lists both items kept in browser storage');
+  check([COOKIE_KEY, ANSWERS_KEY, REFERENCE_KEY].every((key) => text.includes(key)), 'The cookies page lists all three items kept in browser storage');
   check(/1 year/.test(text) && /close this browser tab/i.test(text), 'It says how long each item is kept');
   check((await page.locator('table.govuk-table').count()) === 1, 'The storage is shown in a GOV.UK table');
   await context.close();

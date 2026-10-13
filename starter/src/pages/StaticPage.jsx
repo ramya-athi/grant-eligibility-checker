@@ -20,10 +20,11 @@ const CONTENT = {
       head: ['Name', 'What it is for', 'How long it is kept'],
       rows: [
         ['green-home-grant-answers', 'Remembers your answers while you use the service, so you can go back and change them.', 'Until you close this browser tab'],
+        ['green-home-grant-reference', 'Remembers your reference number, so it stays the same if you reload your result.', 'Until you close this browser tab'],
         ['green-home-grant-cookie-choice', 'Remembers that you have seen the message about cookies, so we do not show it on every page.', '1 year'],
       ],
     },
-    after: ['You can clear both at any time in your browser settings. If you do, you will start again from the first question.'],
+    after: ['You can clear all of these at any time in your browser settings. If you do, you will start again from the first question.'],
   },
   terms: {
     title: 'Terms and conditions',
