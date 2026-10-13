@@ -5,15 +5,15 @@ import { checkEligibility } from '../eligibility';
 import { firstMissingPath } from '../questions';
 
 const HEADINGS = {
-  eligible: 'Eligible',
-  partial: 'Partially Eligible',
-  'not-eligible': 'Not Eligible',
+  eligible: 'You may be eligible',
+  partial: 'You may be partially eligible',
+  'not-eligible': 'You are not eligible',
 };
 
 const PANEL_CLASS = {
-  eligible: '',
-  partial: 'govuk-panel--partial',
-  'not-eligible': 'govuk-panel--not-eligible',
+  eligible: 'govuk-panel--confirmation',
+  partial: 'govuk-panel--confirmation govuk-panel--partial',
+  'not-eligible': 'govuk-panel--confirmation govuk-panel--not-eligible',
 };
 
 function ResultPage({ answers, resetAnswers }) {
@@ -27,6 +27,11 @@ function ResultPage({ answers, resetAnswers }) {
   const amount = `£${result.amount.toLocaleString('en-GB')}`;
   const canApply = result.outcome !== 'not-eligible';
 
+  function printPage(event) {
+    event.preventDefault();
+    window.print();
+  }
+
   function startAgain() {
     resetAnswers();
     navigate('/');
@@ -36,7 +41,23 @@ function ResultPage({ answers, resetAnswers }) {
     <>
       <div className={`govuk-panel ${PANEL_CLASS[result.outcome]}`}>
         <h1 className="govuk-panel__title">{HEADINGS[result.outcome]}</h1>
-        <div className="govuk-panel__body">{result.support}</div>
+        <div className="govuk-panel__body">
+          Your support
+          <br />
+          <strong>{result.support}</strong>
+        </div>
+      </div>
+
+      <p className="govuk-body-l">{result.summary}</p>
+
+      <div className="govuk-warning-text">
+        <span className="govuk-warning-text__icon" aria-hidden="true">
+          !
+        </span>
+        <strong className="govuk-warning-text__text">
+          <span className="govuk-visually-hidden">Warning</span>
+          This is an indication only, not a decision. Any application would be checked.
+        </strong>
       </div>
 
       <h2 className="govuk-heading-m">Why you got this result</h2>
@@ -46,45 +67,67 @@ function ResultPage({ answers, resetAnswers }) {
         ))}
       </ul>
 
-      <h2 className="govuk-heading-m">Maximum grant you may get</h2>
-      <p className="govuk-body">
-        <strong>{amount}</strong> (indicative). This is a placeholder figure. The real amount will depend on the scheme rules.
+      <h2 className="govuk-heading-m">The most you may get</h2>
+      <p className="govuk-body-l govuk-!-margin-bottom-2">
+        <strong>{amount}</strong>
+      </p>
+      <p className="govuk-hint">
+        This is an indicative figure for this prototype. The real amount will depend on the scheme rules.
       </p>
 
       <h2 className="govuk-heading-m">What you can do next</h2>
       {canApply ? (
-        <p className="govuk-body">
-          <Link className="govuk-link" to="/apply">
-            Go to the Green Home Grant application service
-          </Link>{' '}
-          (a fictional service for this prototype).
-        </p>
+        <ol className="govuk-list govuk-list--number">
+          <li>
+            <Link className="govuk-link" to="/apply">
+              Go to the Green Home Grant application service
+            </Link>{' '}
+            to start an application. This is a fictional service for the prototype.
+          </li>
+          <li>
+            Print this page, using the link below, to keep a record of your result and the reasons for it.
+          </li>
+          <li>
+            If any answer is wrong,{' '}
+            <Link className="govuk-link" to="/check-answers">
+              change your answers
+            </Link>{' '}
+            and check again. Your result may change.
+          </li>
+        </ol>
       ) : (
-        <>
-          <p className="govuk-body">You cannot get a Green Home Grant based on your answers. You can:</p>
-          <ul className="govuk-list govuk-list--bullet">
-            <li>
-              read our{' '}
-              <Link className="govuk-link" to="/help">
-                help page
-              </Link>
-            </li>
-            <li>
-              <Link className="govuk-link" to="/contact">
-                contact us
-              </Link>{' '}
-              if you think your answers were wrong or your situation changes
-            </li>
-          </ul>
-        </>
+        <ol className="govuk-list govuk-list--number">
+          <li>
+            If any answer is wrong,{' '}
+            <Link className="govuk-link" to="/check-answers">
+              change your answers
+            </Link>{' '}
+            and check again. Your result may change.
+          </li>
+          <li>
+            Read the{' '}
+            <Link className="govuk-link" to="/help">
+              help page
+            </Link>{' '}
+            to find out how the checker works.
+          </li>
+          <li>
+            <Link className="govuk-link" to="/contact">
+              Contact us
+            </Link>{' '}
+            if your situation changes or you need support.
+          </li>
+        </ol>
       )}
 
-      <p className="govuk-body">
-        <Link className="govuk-link" to="/check-answers">
-          Change your answers
-        </Link>
+      <p className="govuk-body govuk-!-display-none-print">
+        <a className="govuk-link" href="#print" onClick={printPage}>
+          Print this page
+        </a>
       </p>
-      <GovukButton onClick={startAgain}>Start again</GovukButton>
+      <div className="govuk-!-display-none-print">
+        <GovukButton onClick={startAgain}>Start again</GovukButton>
+      </div>
     </>
   );
 }

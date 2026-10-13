@@ -55,18 +55,19 @@ Each requirement can be checked by using the running app in a browser.
 30. A homeowner (single or joint) with income under £40,000, in a detached, semi-detached, terraced, mid-terraced house or bungalow, with no insulation and gas boiler or electric heating, sees the Eligible (full) result.
 31. A homeowner in a house or bungalow with income of £40,000 to £59,999, no insulation and gas boiler or electric heating, sees the Partially Eligible result. The result says it is a reduced grant because of income.
 32. A homeowner in a house or bungalow with income under £60,000, with insulation and gas boiler or electric heating, sees the Partially Eligible result for Heat Pump Support Only.
-33. A homeowner in a house or bungalow with income under £60,000, without insulation and with oil, biofuel, heat pump, solar or other heating, sees the Partially Eligible result for Insulation Support Only.
+33. The result page shows the outcome in a prominent panel, in plain words: "You may be eligible", "You may be partially eligible" or "You are not eligible". The panel body, laid out as in the GOV.UK confirmation panel, reads "Your support" with the support name in bold under it (for example "Full grant" or "Heat Pump Support Only"), and a sentence below the panel says in plain English what the user may get. A warning notice says the result is an indication only, not a decision.
 34. A homeowner with income under £60,000 who lives in a flat or apartment or a studio flat always sees the Partially Eligible result, whatever their insulation and heating answers.
 35. Any other homeowner with income under £60,000 sees at least the Partially Eligible result, never Not Eligible.
 36. Every one of the 4 housing × 4 income × 7 property × 2 insulation × 7 heating answer combinations (1,568 in all) produces exactly one result, and none produces an error page.
 
 ### Result page
 
-37. The result page shows the outcome (Eligible, Partially Eligible, or Not Eligible) in a prominent panel. The panel is green for Eligible, a different colour for Partially Eligible, and grey for Not Eligible, and the outcome is also stated in words, never by colour alone.
+37. The result page shows the outcome (Eligible, Partially Eligible, or Not Eligible) in a prominent coloured panel with white text: green for Eligible, blue for Partially Eligible, and dark grey for Not Eligible. The outcome is stated in words in the panel, never by colour alone.
 38. The result page explains in plain language why the user got this result, naming the answers that led to it.
 39. The result page shows an indicative maximum grant amount. This is a placeholder figure and is labelled as indicative.
-40. The result page gives next steps. Eligible and Partially Eligible users see a link to a fictional application service, and Not Eligible users see suggestions for further support.
+40. The result page lists numbered next steps. Eligible and Partially Eligible users are told to go to the fictional application service (a link), to print the page to keep a record, and to change their answers if any is wrong. Not Eligible users are told to change their answers if any is wrong, read the help page, and contact the service if their situation changes.
 41. The result page has a way to start again. Starting again clears all previous answers, including after a reload.
+52. The result page has a "Print this page" link. Selecting it opens the browser's print dialog. The printed page shows the outcome in a bordered box (not white text on a missing background), the reasons, the amount and next steps, and leaves out the header bar, banners, back link, footer, buttons and the print link itself.
 
 ### Accessibility, quality and running
 
@@ -105,6 +106,8 @@ Each requirement can be checked by using the running app in a browser.
 20. **Record AI use in `starter/AI_LOG.md`, replacing its married couple's allowance sample entry:** the starter asks for three or more entries, and the sample is about a different scheme.
 21. **Skip link plus a focus reset on every page change:** a single-page app does not reset keyboard focus like a full page load, so keyboard users would otherwise start from wherever the removed button was.
 22. **Tell the CSS minifier to recover from errors (`css.lightningcss.errorRecovery` in `vite.config.js`):** the installed Vite 8 rejects an old Internet Explorer rule inside govuk-frontend and the build failed without it.
+23. **Result panel uses the library's `govuk-panel--confirmation` class for every outcome, with colour variants in `custom.css`, and a print link that calls `window.print()`:** without that class the panel had no background, and GOV.UK's print guidance is a plain "Print this page" link that is hidden when printing.
+24. **Each outcome carries its own plain-English summary sentence, written in `eligibility.js` next to the rules:** the wording stays with the rule that produces it, so the two cannot drift apart, and tests check every combination has one.
 
 ## 3. Open questions
 

@@ -74,6 +74,7 @@ test('every answer combination gives exactly one valid outcome', () => {
             const r = checkEligibility({ ownership, income: inc, propertyType, insulation: ins, heating: heat });
             assert.ok(['eligible', 'partial', 'not-eligible'].includes(r.outcome));
             assert.ok(r.reasons.length > 0);
+            assert.ok(typeof r.summary === 'string' && r.summary.length > 0);
             assert.equal(typeof r.amount, 'number');
             const isOwner = ownership === 'own' || ownership === 'own-joint';
             if (!isOwner || inc === '60k-plus') assert.equal(r.outcome, 'not-eligible');

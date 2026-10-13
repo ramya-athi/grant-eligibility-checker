@@ -34,7 +34,7 @@ On the lab VM the proxy maps `app<N>-lab11133.labs.decoded.com` to port `500<N>`
 ## Gotchas
 
 - `starter/node_modules` is tracked in git (and `.gitignore` does not change that), and `npm install` leaves hundreds of modified files in it. Stage with `git add -A -- . ':!starter/node_modules'` and do not commit those changes.
-- `package.json` is on Vite 8 and React Router 7 (after an audit fix). Do not run `npm audit fix --force`. `vite.config.js` sets `css.lightningcss.errorRecovery: true` because govuk-frontend contains an Internet Explorer media query the minifier rejects; the build fails without it. The `server` block there is the course's lab setup, so leave it alone.
+- `package.json` is on Vite 8, `@vitejs/plugin-react` 5.2 (4.x only supports Vite up to 7, so a fresh `npm install` fails with ERESOLVE on it) and React Router 7. Do not run `npm audit fix --force`. `vite.config.js` sets `css.lightningcss.errorRecovery: true` because govuk-frontend contains an Internet Explorer media query the minifier rejects; the build fails without it. The `server` block there is the course's lab setup, so leave it alone.
 - Browser checks that click through the app must wait for client-side navigation (React Router 7 updates slightly after a click).
 - Record every AI-assisted change in `starter/AI_LOG.md` using its existing four-field table (Date, Task, What AI Generated, What You Changed + Why). It currently has instances 1 to 11.
 - Keep `spec.md` and `intent.md` in step with behaviour changes, and describe the grant amounts as placeholders wherever they are shown.

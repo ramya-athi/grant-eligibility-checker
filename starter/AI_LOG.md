@@ -112,3 +112,48 @@ Document **3+ entries** in your AI_LOG covering **3-5 distinct patterns** from t
 | **Task** | Create a CLAUDE.md that tells future Claude Code sessions how to work in this repository |
 | **What AI Generated** | `CLAUDE.md` with the build, run and test commands (including a single-test command), the architecture that spans several files (Flask serving the Vite build, `questions.js` as the single source for the questions, pure eligibility rules, answer state in session storage, the Change flow, focus and error handling, styling), and the gotchas found during the build. |
 | **What You Changed + Why** | Ran the single-test command to prove it works. Left out file listings and generic advice so the file only holds what is hard to work out from one file. Included the tracked `node_modules` and `npm audit fix --force` warnings because both caused real problems in this project. |
+
+## Instance 13: Documentation: audit log
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Create an audit log for this project in the same table format as the booking project's audit log |
+| **What AI Generated** | `starter/AUDIT_LOG.md`, a before and after table with four rows: tests, Lighthouse performance and accessibility, keyboard only, and 375px wide. |
+| **What You Changed + Why** | The before and Lighthouse figures (4 tests failed, 78 and 85 before, 100 and 100 after, keyboard failed then passed) are the user's own and were not re-measured by the AI. The only figure the AI checked was 8 of 8 tests passing, from a run of `npm test` today. Kept to the four rows the user asked for and left out the JavaScript size row, because no size was given. Read "37px" as 375px. |
+
+## Instance 14: Debugging and feature: white result panel and a print link
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Fix the result page showing a white background, and add a print link like the GOV.UK Design System |
+| **What AI Generated** | A fix in `ResultPage.jsx` so the panel always carries the library's `govuk-panel--confirmation` class, plus extra bottom spacing. A "Print this page" link that calls `window.print()`. Print styles in `custom.css` that give the panel a black border with dark text, and hide the cookie banner, phase banner, service name bar, back link, footer, skip link, buttons and the print link. |
+| **What You Changed + Why** | Found the cause by reading the computed colours in a headless browser: the Eligible panel had a transparent background, because only the Partially Eligible and Not Eligible panels had the colour classes I had written. Eligible is now green (rgb 15, 122, 82), Partially Eligible blue and Not Eligible grey, all with white text. Without the print rules the white text would print invisibly, so the panel is bordered in print. Hid the print link, Change link and Start again button when printing. Tested by pressing the link with `window.print` replaced by a counter (it was called once, and the page stayed on /result), by taking a print-media screenshot, by rerunning every browser check (all pass), and `npm test` (8 of 8). Updated spec.md requirements 37 and 52 and decision 23. Not tested: an actual printer or Save as PDF, and Safari. |
+
+## Instance 15: Content: plainer result wording and clearer next steps
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Improve the result page wording and next steps (improvement 11 from the list of ways to stand out) |
+| **What AI Generated** | A `summary` sentence for every outcome in `eligibility.js`, a result panel that says "You may be eligible", "You may be partially eligible" or "You are not eligible", a GOV.UK warning notice ("an indication only, not a decision"), "The most you may get" with the amount shown large and the prototype note as hint text, and numbered next steps that differ for people who can and cannot apply. |
+| **What You Changed + Why** | Kept the summary text inside the rules file so the wording cannot drift from the rule that produces it, and extended the all-combinations test to check every result has one. Removed a doubled "Green Home Grant" from the page title that showed up in the browser tab. Updated my own browser test, which still looked for the old headings, and updated spec.md requirements 33 and 40 and decision 24. Avoided inventing real application requirements (such as which documents to bring), because the scheme is fictional and the intent says next steps are placeholders. The heat pump and insulation summaries say that is "the only support you can get", which follows from the rules but is my wording, so check it suits you. All browser checks, the 8 unit tests and the 26 scenarios pass. |
+
+## Instance 16: Debugging: npm install fails with ERESOLVE on a fresh machine
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Explain and fix `npm install` failing on another lab machine with a peer dependency conflict between vite and @vitejs/plugin-react |
+| **What AI Generated** | A one-line change in `starter/package.json` raising `@vitejs/plugin-react` from `^4.2.0` to `^5.2.0`, and the matching update of `package-lock.json`. Added a note to CLAUDE.md. |
+| **What You Changed + Why** | Read the error: `package.json` asks for vite 8, but plugin-react 4.7 only accepts vite up to 7, so npm refuses to install. It had worked here only because `node_modules` was already present. Checked on the npm registry that plugin-react 5.2.0 is the first version that accepts vite 8 and chose it over 6.x because it changes the least. Proved the fix by copying the project without `node_modules` into a clean folder: `npm install` finished with 0 vulnerabilities, `npm run build` worked and `npm test` passed 8 of 8. Did not use `--force` or `--legacy-peer-deps`, because they hide the conflict instead of fixing it. |
+
+## Instance 17: Refactor: result panel markup copied from the GOV.UK Design System
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Make the result panel use the GOV.UK confirmation panel markup, and explain the lightningcss build error |
+| **What AI Generated** | The panel in `ResultPage.jsx` now follows the Design System example exactly: a `govuk-panel` with the title in `govuk-panel__title` and a `govuk-panel__body` of "Your support", a line break, then the support name in `<strong>`. Removed the extra margin utility class I had added. |
+| **What You Changed + Why** | Kept the two outcome colour classes (`govuk-panel--partial` and `govuk-panel--not-eligible`) on top of `govuk-panel--confirmation`. Without them Not Eligible and Partially Eligible would show a green success panel, which is misleading, and the colour is also in the starter's own TODO for this page. I read the instruction to remove classes as the extra ones only, so check that is what was meant. Updated my browser test to read the bold support text, and updated spec.md requirement 33. All browser checks pass. On the build error: it comes from an Internet Explorer media query (`min-width: 0\0`) inside govuk-frontend, which Vite 8's CSS minifier (lightningcss) rejects. `css.lightningcss.errorRecovery: true` in vite.config.js tells it to skip that rule, and that setting is already on origin/main. |
