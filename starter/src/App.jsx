@@ -19,7 +19,7 @@ import StaticPage from './pages/StaticPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
-  const { answers, setAnswer, resetAnswers } = useAnswers();
+  const { answers, setAnswer, resetAnswers, reference, setReference } = useAnswers();
   const questionProps = { answers, setAnswer };
 
   // A new page in a single-page app does not reset keyboard focus the way a full page load does.
@@ -52,8 +52,14 @@ function App() {
             <Route path="/property-type" element={<PropertyTypePage {...questionProps} />} />
             <Route path="/insulation" element={<InsulationPage {...questionProps} />} />
             <Route path="/heating" element={<HeatingPage {...questionProps} />} />
-            <Route path="/check-answers" element={<CheckAnswersPage answers={answers} />} />
-            <Route path="/result" element={<ResultPage answers={answers} resetAnswers={resetAnswers} />} />
+            <Route
+              path="/check-answers"
+              element={<CheckAnswersPage answers={answers} setReference={setReference} />}
+            />
+            <Route
+              path="/result"
+              element={<ResultPage answers={answers} reference={reference} resetAnswers={resetAnswers} />}
+            />
             <Route path="/accessibility-statement" element={<AccessibilityStatementPage />} />
             <Route path="/privacy" element={<StaticPage pageKey="privacy" />} />
             <Route path="/cookies" element={<StaticPage pageKey="cookies" />} />
