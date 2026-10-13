@@ -103,3 +103,12 @@ Document **3+ entries** in your AI_LOG covering **3-5 distinct patterns** from t
 | **Task** | Create a skill named check-eligibility that runs the Not Eligible, Eligible and Partially Eligible scenarios and reports each result and an overall result |
 | **What AI Generated** | `.claude/skills/check-eligibility/SKILL.md` and `run.mjs`, which runs 26 named scenarios (6 Not Eligible, 5 Eligible, 15 Partially Eligible) through the app's real rules and prints a table per group and an overall PASS or FAIL. |
 | **What You Changed + Why** | Wrote the expected outcome for each scenario from intent.md, not from the code, so a wrong rule would fail. Proved that by changing one expected value in a temporary copy: the run printed FAIL, a non-zero exit code and a failed total, and I deleted the copy. The real run passes 26 of 26. Caveat: the 'Reduced support' cases (flat, and insulated with non-gas heating) only check the outcome, because the intent does not say what the support should be called. |
+
+## Instance 12: Documentation: CLAUDE.md for future sessions
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Create a CLAUDE.md that tells future Claude Code sessions how to work in this repository |
+| **What AI Generated** | `CLAUDE.md` with the build, run and test commands (including a single-test command), the architecture that spans several files (Flask serving the Vite build, `questions.js` as the single source for the questions, pure eligibility rules, answer state in session storage, the Change flow, focus and error handling, styling), and the gotchas found during the build. |
+| **What You Changed + Why** | Ran the single-test command to prove it works. Left out file listings and generic advice so the file only holds what is hard to work out from one file. Included the tracked `node_modules` and `npm audit fix --force` warnings because both caused real problems in this project. |
