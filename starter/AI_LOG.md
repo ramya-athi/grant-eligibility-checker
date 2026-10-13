@@ -274,3 +274,30 @@ Document **3+ entries** in your AI_LOG covering **3-5 distinct patterns** from t
 | **Task** | A colleague pushed the reference number feature to main while I had uncommitted cookie work. Combine both without losing either |
 | **What AI Generated** | Committed my work on a new branch (`cookie-storage`) first as a safety net, stashed the local `node_modules` changes that blocked the merge, merged `origin/main`, and resolved the two conflicts (`spec.md` and `AI_LOG.md`) by keeping both sides. `CLAUDE.md` and `scripts/a11y-scan.mjs` merged on their own and were read afterwards to check they were still correct. |
 | **What You Changed + Why** | Both of us had used the same numbers, so I kept the colleague's (already on main) and renumbered mine: spec requirement 54 became 61, decision 27 became 34, and my AI_LOG entries 24 to 26 became 27 to 29. Fixed the references to those numbers. After the merge the Cookies page was out of date: the colleague's feature adds a third item to session storage (the reference number), so I added it to the table and to the cookie check, which now expects all three. Reinstalled packages, then ran everything on the merged code: 19 unit tests, the accessibility scan (26 scans, 0 violations), the cookie check and my browser checks all pass. My own browser test needed a fix because the panel now has two bold lines. Not pushed yet. |
+
+## Instance 31: Documentation: presentation run sheet
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Create a presentation guide saying what to show and where to show it |
+| **What AI Generated** | `PRESENTATION.md` in the repository root: a timed run sheet with 11 sections (problem, planning, journey, live demo of the three outcomes, errors, accessibility, rules and tests, cookies, AI log, rubric map, close), a pre-demo checklist, and a table of fixes if something goes wrong. |
+| **What You Changed + Why** | Checked the routes (`/check-answers`, `/accessibility-statement`, `/cookies`), the print link wording and the test and scenario counts (19 tests, 1,568 combinations, 26 scenarios) against the code so the demo steps match the running app. Nothing in the app changed. |
+
+## Instance 32: Documentation: submission README
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Read the Week 3 submission and peer feedback guide and create the short README it asks for |
+| **What AI Generated** | `starter/README.md` in the guide's format: team name, app URL, code link, what is in the submission, and what reviewers should look at beyond the minimum. |
+| **What You Changed + Why** | The guide's example paths did not match our code (no `src/utils/` and no `docs/eligibility-rules.md`), so I listed our real files. The URL is the `app2-` address because our server is on port 5002, not 5000. The team name is left as a placeholder because it is not written anywhere in the project. |
+
+## Instance 33: Documentation: add print and reference number to the submission README
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Add the print link and the reference number to the "Please look at" section of the submission README, as extras beyond the minimum |
+| **What AI Generated** | Two bullets in `starter/README.md`: the "Print this page" link on the result page, and the reference number (`ELG-ddmmyy-XXXXXX`) shown on each result. |
+| **What You Changed + Why** | Said plainly that the reference is made in the browser and not stored on a server, so reviewers are not told it can be looked up later. That matches spec requirements 54 to 60. |

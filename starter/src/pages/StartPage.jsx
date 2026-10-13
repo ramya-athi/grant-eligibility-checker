@@ -9,7 +9,7 @@ function StartPage() {
   return (
     <>
       <h1 className="govuk-heading-xl">Check if you can get a Green Home Grant</h1>
-      <p className="govuk-body-l">
+      <p className="govuk-body">
         Find out if you may be able to get money towards home insulation or a heat pump. You get an answer straight away, so there is no need to phone and wait.
       </p>
 
