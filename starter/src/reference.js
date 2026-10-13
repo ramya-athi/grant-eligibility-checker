@@ -1,5 +1,5 @@
 // Reference number for a submitted check, made in the browser and only shown on the result page.
-// Nothing is sent to or stored on a server (spec.md requirements 52-58).
+// Nothing is sent to or stored on a server (spec.md requirements 54-60).
 
 // Upper-case letters and numbers without the look-alikes 0, O, 1, I and L (31 characters)
 export const REFERENCE_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';

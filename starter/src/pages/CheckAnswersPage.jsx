@@ -11,7 +11,7 @@ function CheckAnswersPage({ answers, setReference }) {
   const missing = firstMissingPath(answers);
   if (missing) return <Navigate to="/ownership" replace />;
 
-  // Submit gives the check a reference number, made in the browser only (spec 23, 52-58)
+  // Submit gives the check a reference number, made in the browser only (spec 23, 54-60)
   function submit() {
     setReference(generateReference());
     navigate('/result');
@@ -19,7 +19,7 @@ function CheckAnswersPage({ answers, setReference }) {
 
   return (
     <>
-      <Link to="/heating" className="govuk-back-link">
+      <Link to="/heating" className="govuk-back-link govuk-!-display-none-print">
         Back
       </Link>
       <h1 className="govuk-heading-l">Check your answers</h1>

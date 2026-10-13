@@ -1,3 +1,4 @@
+import PageBackLink from '../components/PageBackLink';
 import usePageTitle from '../hooks/usePageTitle';
 
 const CONTENT = {
@@ -49,6 +50,7 @@ export default function StaticPage({ pageKey }) {
 
   return (
     <>
+      <PageBackLink />
       <h1 className="govuk-heading-l">{page.title}</h1>
       {page.body.map((text) => (
         <p className="govuk-body" key={text}>

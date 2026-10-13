@@ -39,7 +39,7 @@ Each requirement can be checked by using the running app in a browser.
 20. If the user reloads the browser part-way through the journey, their answers are still there.
 21. On the Check your answers page, the user sees all five questions with their answers in a summary list, and each row has a Change link.
 22. When the user clicks Change, the matching question opens with the current answer selected. After Continue, the user returns directly to the Check your answers page, not to the next question.
-23. The Check your answers page has a Submit button. Submit gives the check a reference number (requirements 52 to 58), then takes the user to the result page.
+23. The Check your answers page has a Submit button. Submit gives the check a reference number (requirements 54 to 60), then takes the user to the result page.
 24. A user who opens a later page (for example the Check your answers page or the result page) before answering the questions is sent back to the first question, and no error page is shown.
 25. Opening any journey page directly by typing its address, or reloading it, shows that page and not a server error.
 
@@ -55,18 +55,20 @@ Each requirement can be checked by using the running app in a browser.
 30. A homeowner (single or joint) with income under £40,000, in a detached, semi-detached, terraced, mid-terraced house or bungalow, with no insulation and gas boiler or electric heating, sees the Eligible (full) result.
 31. A homeowner in a house or bungalow with income of £40,000 to £59,999, no insulation and gas boiler or electric heating, sees the Partially Eligible result. The result says it is a reduced grant because of income.
 32. A homeowner in a house or bungalow with income under £60,000, with insulation and gas boiler or electric heating, sees the Partially Eligible result for Heat Pump Support Only.
-33. A homeowner in a house or bungalow with income under £60,000, without insulation and with oil, biofuel, heat pump, solar or other heating, sees the Partially Eligible result for Insulation Support Only.
+33. The result page shows the outcome in a prominent panel, in plain words: "You may be eligible", "You may be partially eligible" or "You are not eligible". The panel body, laid out as in the GOV.UK confirmation panel, reads "Your support" with the support name in bold under it (for example "Full grant" or "Heat Pump Support Only"), and a sentence below the panel says in plain English what the user may get. A warning notice says the result is an indication only, not a decision.
 34. A homeowner with income under £60,000 who lives in a flat or apartment or a studio flat always sees the Partially Eligible result, whatever their insulation and heating answers.
 35. Any other homeowner with income under £60,000 sees at least the Partially Eligible result, never Not Eligible.
 36. Every one of the 4 housing × 4 income × 7 property × 2 insulation × 7 heating answer combinations (1,568 in all) produces exactly one result, and none produces an error page.
 
 ### Result page
 
-37. The result page shows the outcome (Eligible, Partially Eligible, or Not Eligible) in a prominent panel. The panel is green for Eligible, a different colour for Partially Eligible, and grey for Not Eligible, and the outcome is also stated in words, never by colour alone. The page content appears in this order: the outcome, then the reference number (requirement 53), then the details of the decision (requirements 38 to 40).
+37. The result page shows the outcome in plain words as the main heading, inside the standard green GOV.UK confirmation panel, for every outcome. Under the heading the panel says what the user may be eligible for (for example "You may be eligible for" and then "Heat Pump Support Only"), or "Your support" and "No grant" for Not Eligible. The outcome is stated in words, never by colour alone, so a green panel on a Not Eligible result is not the only signal. The page content appears in this order: the outcome, then the reference number (requirement 55), then the details of the decision (requirements 38 to 40).
 38. The result page explains in plain language why the user got this result, naming the answers that led to it.
 39. The result page shows an indicative maximum grant amount. This is a placeholder figure and is labelled as indicative.
-40. The result page gives next steps. Eligible and Partially Eligible users see a link to a fictional application service, and Not Eligible users see suggestions for further support.
+40. The result page lists numbered next steps. Eligible and Partially Eligible users are told to go to the fictional application service (a link), to print the page to keep a record, and to change their answers if any is wrong. Not Eligible users are told to change their answers if any is wrong, read the help page, and contact the service if their situation changes.
 41. The result page has a way to start again. Starting again clears all previous answers and the reference number, including after a reload.
+52. The result page has a "Print this page" link. Selecting it opens the browser's print dialog. The printed page shows the outcome, the reasons, the amount and next steps, and leaves out the header bar, banners, back link, footer, buttons and the print link itself.
+53. The Accessibility statement, Privacy, Cookies, Terms and conditions, Help, Contact and application placeholder pages each have a Back link at the top. It returns to the page the user came from (for example the question they were on, with their answers kept). If the page was opened directly, it goes to the start page. It works with the keyboard.
 
 ### Accessibility, quality and running
 
@@ -83,18 +85,18 @@ Each requirement can be checked by using the running app in a browser.
 
 ### Reference number
 
-52. When the user presses Submit on the Check your answers page, the service creates a reference number in the format `ELG-ddmmyy-XXXXXX`:
+54. When the user presses Submit on the Check your answers page, the service creates a reference number in the format `ELG-ddmmyy-XXXXXX`:
     - `ELG`, then a hyphen
     - the date of the check in UK time (Europe/London), as a two-digit day, month and year (`ddmmyy`), then a hyphen
     - 6 random characters, each an upper-case letter or a number, leaving out the look-alike characters 0, O, 1, I and L. That leaves the letters A to Z except I, L and O, and the numbers 2 to 9: 31 possible characters.
 
     For example, a check made on 13 October 2026 could get `ELG-131026-7KQ2ZD`.
-53. The result page shows the reference number directly after the outcome, inside the outcome panel. It is labelled "Your reference number" and shown in bold, following the GOV.UK confirmation panel pattern. The support label (for example "Heat pump support only") moves out of the panel, and becomes the first line of the details below it.
-54. The reference number is made in the user's browser and is only shown on the result page. It is not sent to the server, and neither the reference nor the answers are stored on a server, in a file or in a database. It cannot be looked up later.
-55. Reloading the result page shows the same reference number. Like the answers (decision 6), it is kept in the browser's session storage until the tab is closed or the user starts again.
-56. If the user changes any answer after submitting (for example with "Change your answers" on the result page), the reference number is cleared, and submitting again gives a new one. Going through a Change link and pressing Continue without changing anything keeps the reference number.
-57. Opening the result page with every question answered but no reference number (for example by typing `/result`, or after changing an answer) sends the user to the Check your answers page, so they must press Submit to get a result.
-58. Every check gets its own random reference number. Because nothing is stored, the service cannot check that a reference has never been used before. With 31⁶ (about 887 million) possible references per day, two checks getting the same one is very unlikely.
+55. The result page shows the reference number inside the outcome panel, after the outcome heading and the support line (for example "You may be eligible for Heat Pump Support Only"), as "Your reference number - " followed by the reference in bold. The details of the decision follow below the panel.
+56. The reference number is made in the user's browser and is only shown on the result page. It is not sent to the server, and neither the reference nor the answers are stored on a server, in a file or in a database. It cannot be looked up later.
+57. Reloading the result page shows the same reference number. Like the answers (decision 6), it is kept in the browser's session storage until the tab is closed or the user starts again.
+58. If the user changes any answer after submitting (for example with "Change your answers" on the result page), the reference number is cleared, and submitting again gives a new one. Going through a Change link and pressing Continue without changing anything keeps the reference number.
+59. Opening the result page with every question answered but no reference number (for example by typing `/result`, or after changing an answer) sends the user to the Check your answers page, so they must press Submit to get a result.
+60. Every check gets its own random reference number. Because nothing is stored, the service cannot check that a reference has never been used before. With 31⁶ (about 887 million) possible references per day, two checks getting the same one is very unlikely.
 
 ## 2. Decisions
 
@@ -109,7 +111,7 @@ Each requirement can be checked by using the running app in a browser.
 9. **Question wording and options are replaced with those in the intent:** the starter's income bands (31,000 and 50,000), five insulation choices (including "I do not know"), and heating and housing options do not match the grant rules.
 10. **Remove the extra `<main>` elements inside the starter's pages, keeping the one in `App.jsx`:** nested main landmarks harm screen reader users, and the Accessibility statement page has one too.
 11. **Mount the phase banner and footer as the starter's TODOs say, rebuild them and the header with GOV.UK Frontend's markup, and add a cookie banner component:** the starter had no cookie banner and only one footer link.
-12. **Use the official `govuk-frontend` package, compiled with Sass in `src/app.scss`, with Arial instead of GDS Transport, plus a small `src/custom.css`:** this gives genuine GOV.UK components instead of hand-written look-alike CSS, and GDS Transport may only be used on service.gov.uk.
+12. **Use the official `govuk-frontend` package, compiled with Sass in `src/app.scss`, with Arial instead of GDS Transport, and no custom CSS:** this gives genuine GOV.UK components instead of hand-written look-alike CSS, and GDS Transport may only be used on service.gov.uk. `app.scss` contains only the library import and its two settings.
 13. **One placeholder grant amount per outcome, held in one module:** the intent says amounts are placeholders, so they are easy to replace later.
 14. **The "Other" heating text box appears and disappears in the front end only:** the app needs scripts to run at all, so a no-script fallback adds nothing.
 15. **Required-field validation only, shown as a GOV.UK error summary plus an inline message:** the user asked for errors that look like the GOV.UK Design System; advanced validation stays in Phase 2.
@@ -120,13 +122,17 @@ Each requirement can be checked by using the running app in a browser.
 20. **Record AI use in `starter/AI_LOG.md`, replacing its married couple's allowance sample entry:** the starter asks for three or more entries, and the sample is about a different scheme.
 21. **Skip link plus a focus reset on every page change:** a single-page app does not reset keyboard focus like a full page load, so keyboard users would otherwise start from wherever the removed button was.
 22. **Tell the CSS minifier to recover from errors (`css.lightningcss.errorRecovery` in `vite.config.js`):** the installed Vite 8 rejects an old Internet Explorer rule inside govuk-frontend and the build failed without it.
-23. **Make the reference number in the browser and store nothing (`src/reference.js`):** the platform the service runs on can't support saving checks on the server, so the reference is only shown to the user. The Flask server stays as it was: it only serves the built front end.
-24. **Use the browser's `crypto.getRandomValues` for the random part:** it gives unpredictable values, unlike `Math.random`. Values that would make some characters more likely than others are thrown away.
-25. **Work out the date with `Intl.DateTimeFormat` in the Europe/London time zone:** a user's device might be set to another time zone, and UTC would give the wrong date between midnight and 1am during British Summer Time.
-26. **Leave out 0, O, 1, I and L:** these are easy to confuse when a reference is read out or typed, as GOV.UK guidance on reference numbers points out.
-27. **Keep the reference number in session storage next to the answers (`useAnswers`):** reloading the result page then shows the same reference (requirement 55), in the same way decision 6 keeps the answers. It is cleared only when an answer actually changes, or the user starts again.
-28. **Show the reference inside the outcome panel ("Your reference number" plus the reference in bold):** this puts the reference straight after the outcome, as asked, using the GOV.UK confirmation panel pattern.
-29. **Test the generator with Node's built-in test runner (`src/reference.test.js`), like the eligibility rules:** the date and random source can be passed in, so the tests can fix them, and no new test library is needed.
+23. **Every outcome uses the library's confirmation panel as it is, and the print link calls `window.print()`:** the user asked for no custom CSS, and the library's panel is green only. The heading and the "You may be eligible for" or "Your support" line carry the meaning in words. Print layout comes from the library's own print styles plus its `govuk-!-display-none-print` class.
+24. **Each outcome carries its own plain-English summary sentence, written in `eligibility.js` next to the rules:** the wording stays with the rule that produces it, so the two cannot drift apart, and tests check every combination has one.
+25. **An automated accessibility scan (`npm run a11y`) uses axe-core through Playwright and covers every page and state at two widths:** it gives repeatable evidence for the WCAG 2.2 AA requirement, and it exits with an error on any violation so it can run in CI.
+26. **A Back link on the footer pages that uses the browser history, falling back to the start page:** the GOV.UK Back link pattern returns users to the page they came from, which fits pages reachable from anywhere, and a plain "Home" link would drop the user's place in the journey. The service name in the header already links to the start page.
+27. **Make the reference number in the browser and store nothing (`src/reference.js`):** the platform the service runs on can't support saving checks on the server, so the reference is only shown to the user. The Flask server stays as it was: it only serves the built front end.
+28. **Use the browser's `crypto.getRandomValues` for the random part:** it gives unpredictable values, unlike `Math.random`. Values that would make some characters more likely than others are thrown away.
+29. **Work out the date with `Intl.DateTimeFormat` in the Europe/London time zone:** a user's device might be set to another time zone, and UTC would give the wrong date between midnight and 1am during British Summer Time.
+30. **Leave out 0, O, 1, I and L:** these are easy to confuse when a reference is read out or typed, as GOV.UK guidance on reference numbers points out.
+31. **Keep the reference number in session storage next to the answers (`useAnswers`):** reloading the result page then shows the same reference (requirement 57), in the same way decision 6 keeps the answers. It is cleared only when an answer actually changes, or the user starts again.
+32. **Show the reference inside the outcome panel, after the support line, as "Your reference number - " followed by the reference in bold:** this keeps the reference with the outcome, as asked, inside the GOV.UK confirmation panel.
+33. **Test the generator with Node's built-in test runner (`src/reference.test.js`), like the eligibility rules:** the date and random source can be passed in, so the tests can fix them, and no new test library is needed.
 
 ## 3. Open questions
 

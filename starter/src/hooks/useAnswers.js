@@ -32,7 +32,7 @@ export default function useAnswers() {
   useEffect(() => store(REFERENCE_KEY, reference), [reference]);
 
   // Changing any answer means the submitted check no longer matches, so its reference is cleared
-  // and the user must submit again to get a new one (spec.md requirements 56 and 57).
+  // and the user must submit again to get a new one (spec.md requirements 58 and 59).
   // Continuing through a Change link without changing anything keeps the reference.
   const setAnswer = useCallback((changes) => {
     const changed = Object.entries(changes).some(([field, value]) => answersRef.current[field] !== value);

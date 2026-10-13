@@ -10,15 +10,31 @@ export const PLACEHOLDER_AMOUNTS = {
   'not-eligible': 0,
 };
 
+// One plain-English sentence per outcome, shown under the result panel.
+const SUMMARIES = {
+  eligible:
+    'Based on your answers, you may be able to get a full Green Home Grant towards insulating your home or fitting a heat pump.',
+  'partial-income':
+    'Based on your answers, you may be able to get a reduced Green Home Grant because of your household income.',
+  'partial-heat-pump':
+    'Based on your answers, you may be able to get help towards fitting a heat pump. Your home already has insulation, so this is the only support you can get.',
+  'partial-insulation':
+    'Based on your answers, you may be able to get help towards insulating your home. Your main heating is not gas or electric, so this is the only support you can get.',
+  'partial-flat':
+    'Based on your answers, you may be able to get reduced support. Flats and studio flats often have fewer improvement options than houses.',
+  'partial-other': 'Based on your answers, you may be able to get reduced support.',
+  'not-eligible': 'Based on your answers, you cannot get a Green Home Grant.',
+};
+
 const HOUSES = ['detached', 'semi-detached', 'terraced', 'mid-terraced', 'bungalow'];
 const GAS_OR_ELECTRIC = ['gas', 'electric'];
 
 function result(outcome, key, support, reasons) {
-  return { outcome, support, reasons, amount: PLACEHOLDER_AMOUNTS[key] };
+  return { outcome, support, summary: SUMMARIES[key], reasons, amount: PLACEHOLDER_AMOUNTS[key] };
 }
 
 // answers: { ownership, income, propertyType, insulation, heating }
-// Returns: { outcome: 'eligible' | 'partial' | 'not-eligible', support, reasons, amount }
+// Returns: { outcome: 'eligible' | 'partial' | 'not-eligible', support, summary, reasons, amount }
 export function checkEligibility(answers) {
   const { ownership, income, propertyType, insulation, heating } = answers;
   const isOwner = ownership === 'own' || ownership === 'own-joint';

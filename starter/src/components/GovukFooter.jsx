@@ -11,7 +11,7 @@ const LINKS = [
 
 export default function GovukFooter() {
   return (
-    <footer className="govuk-footer" role="contentinfo">
+    <footer className="govuk-footer govuk-!-display-none-print" role="contentinfo">
       <div className="govuk-width-container">
         <div className="govuk-footer__meta">
           <div className="govuk-footer__meta-item govuk-footer__meta-item--grow">
@@ -25,9 +25,9 @@ export default function GovukFooter() {
                 </li>
               ))}
             </ul>
-            <span className="govuk-footer__licence-description govuk-footer__note">
+            <p className="govuk-body-s govuk-!-margin-top-4 govuk-!-margin-bottom-0">
               This is a prototype for a fictional scheme. It does not make real grant decisions.
-            </span>
+            </p>
           </div>
         </div>
       </div>

@@ -113,7 +113,106 @@ Document **3+ entries** in your AI_LOG covering **3-5 distinct patterns** from t
 | **What AI Generated** | `CLAUDE.md` with the build, run and test commands (including a single-test command), the architecture that spans several files (Flask serving the Vite build, `questions.js` as the single source for the questions, pure eligibility rules, answer state in session storage, the Change flow, focus and error handling, styling), and the gotchas found during the build. |
 | **What You Changed + Why** | Ran the single-test command to prove it works. Left out file listings and generic advice so the file only holds what is hard to work out from one file. Included the tracked `node_modules` and `npm audit fix --force` warnings because both caused real problems in this project. |
 
-## Instance 13: Planning: reference number and saved record
+## Instance 13: Documentation: audit log
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Create an audit log for this project in the same table format as the booking project's audit log |
+| **What AI Generated** | `starter/AUDIT_LOG.md`, a before and after table with four rows: tests, Lighthouse performance and accessibility, keyboard only, and 375px wide. |
+| **What You Changed + Why** | The before and Lighthouse figures (4 tests failed, 78 and 85 before, 100 and 100 after, keyboard failed then passed) are the user's own and were not re-measured by the AI. The only figure the AI checked was 8 of 8 tests passing, from a run of `npm test` today. Kept to the four rows the user asked for and left out the JavaScript size row, because no size was given. Read "37px" as 375px. |
+
+## Instance 14: Debugging and feature: white result panel and a print link
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Fix the result page showing a white background, and add a print link like the GOV.UK Design System |
+| **What AI Generated** | A fix in `ResultPage.jsx` so the panel always carries the library's `govuk-panel--confirmation` class, plus extra bottom spacing. A "Print this page" link that calls `window.print()`. Print styles in `custom.css` that give the panel a black border with dark text, and hide the cookie banner, phase banner, service name bar, back link, footer, skip link, buttons and the print link. |
+| **What You Changed + Why** | Found the cause by reading the computed colours in a headless browser: the Eligible panel had a transparent background, because only the Partially Eligible and Not Eligible panels had the colour classes I had written. Eligible is now green (rgb 15, 122, 82), Partially Eligible blue and Not Eligible grey, all with white text. Without the print rules the white text would print invisibly, so the panel is bordered in print. Hid the print link, Change link and Start again button when printing. Tested by pressing the link with `window.print` replaced by a counter (it was called once, and the page stayed on /result), by taking a print-media screenshot, by rerunning every browser check (all pass), and `npm test` (8 of 8). Updated spec.md requirements 37 and 52 and decision 23. Not tested: an actual printer or Save as PDF, and Safari. |
+
+## Instance 15: Content: plainer result wording and clearer next steps
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Improve the result page wording and next steps (improvement 11 from the list of ways to stand out) |
+| **What AI Generated** | A `summary` sentence for every outcome in `eligibility.js`, a result panel that says "You may be eligible", "You may be partially eligible" or "You are not eligible", a GOV.UK warning notice ("an indication only, not a decision"), "The most you may get" with the amount shown large and the prototype note as hint text, and numbered next steps that differ for people who can and cannot apply. |
+| **What You Changed + Why** | Kept the summary text inside the rules file so the wording cannot drift from the rule that produces it, and extended the all-combinations test to check every result has one. Removed a doubled "Green Home Grant" from the page title that showed up in the browser tab. Updated my own browser test, which still looked for the old headings, and updated spec.md requirements 33 and 40 and decision 24. Avoided inventing real application requirements (such as which documents to bring), because the scheme is fictional and the intent says next steps are placeholders. The heat pump and insulation summaries say that is "the only support you can get", which follows from the rules but is my wording, so check it suits you. All browser checks, the 8 unit tests and the 26 scenarios pass. |
+
+## Instance 16: Debugging: npm install fails with ERESOLVE on a fresh machine
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Explain and fix `npm install` failing on another lab machine with a peer dependency conflict between vite and @vitejs/plugin-react |
+| **What AI Generated** | A one-line change in `starter/package.json` raising `@vitejs/plugin-react` from `^4.2.0` to `^5.2.0`, and the matching update of `package-lock.json`. Added a note to CLAUDE.md. |
+| **What You Changed + Why** | Read the error: `package.json` asks for vite 8, but plugin-react 4.7 only accepts vite up to 7, so npm refuses to install. It had worked here only because `node_modules` was already present. Checked on the npm registry that plugin-react 5.2.0 is the first version that accepts vite 8 and chose it over 6.x because it changes the least. Proved the fix by copying the project without `node_modules` into a clean folder: `npm install` finished with 0 vulnerabilities, `npm run build` worked and `npm test` passed 8 of 8. Did not use `--force` or `--legacy-peer-deps`, because they hide the conflict instead of fixing it. |
+
+## Instance 17: Refactor: result panel markup copied from the GOV.UK Design System
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Make the result panel use the GOV.UK confirmation panel markup, and explain the lightningcss build error |
+| **What AI Generated** | The panel in `ResultPage.jsx` now follows the Design System example exactly: a `govuk-panel` with the title in `govuk-panel__title` and a `govuk-panel__body` of "Your support", a line break, then the support name in `<strong>`. Removed the extra margin utility class I had added. |
+| **What You Changed + Why** | Kept the two outcome colour classes (`govuk-panel--partial` and `govuk-panel--not-eligible`) on top of `govuk-panel--confirmation`. Without them Not Eligible and Partially Eligible would show a green success panel, which is misleading, and the colour is also in the starter's own TODO for this page. I read the instruction to remove classes as the extra ones only, so check that is what was meant. Updated my browser test to read the bold support text, and updated spec.md requirement 33. All browser checks pass. On the build error: it comes from an Internet Explorer media query (`min-width: 0\0`) inside govuk-frontend, which Vite 8's CSS minifier (lightningcss) rejects. `css.lightningcss.errorRecovery: true` in vite.config.js tells it to skip that rule, and that setting is already on origin/main. |
+
+## Instance 18: Test generation: automated accessibility scan with axe
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Add an automated accessibility scan (Pa11y or axe) that covers every page, and record the result |
+| **What AI Generated** | `starter/scripts/a11y-scan.mjs`, run with `npm run a11y`. It uses axe-core through Playwright with the WCAG 2.0 to 2.2 A and AA rules, and scans 22 pages and states at 1000px (start with and without the cookie banner, all five questions, both error states, the "Other" heating reveal, check your answers, three results, the footer pages and the not found page) plus 4 pages at 320px. Added `playwright` and `@axe-core/playwright` as dev dependencies. |
+| **What You Changed + Why** | Chose axe over Pa11y because it was quicker to run with the Playwright browser already in use and reports the failing elements. Result: 0 violations in all 26 scans. A clean result proves nothing if the scanner is blind, so I checked it: on the privacy page I injected an image with no alt text, an unlabelled input and faint grey text, and axe reported image-alt, label and color-contrast. That test file was deleted. Also checked that the "Other" text box was really visible when its state was scanned. Limits: axe finds roughly a third of accessibility problems, so it does not replace keyboard and screen reader testing, and it cannot judge things like whether the wording makes sense. Added the result to AUDIT_LOG.md, a decision 25 to spec.md, and the command to CLAUDE.md and the README. |
+
+## Instance 19: Documentation: rubric map in the README
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Add the rubric rows to the README, showing where the evidence for each is |
+| **What AI Generated** | A "How this meets the rubric" table in `README.md` with the six rows named in the handbook (functionality, code quality, AI effectiveness, accessibility, GOV.UK visual compliance, Service Standard conformance), each pointing to files and commands. Also added the accessibility scan to the README and the project layout. |
+| **What You Changed + Why** | The brief with the rubric's full wording is not in this repository, so the table uses only the six row names from the handbook and does not claim to quote the "Excellent" column. Kept every claim to something that exists and can be checked (test counts, scan counts, file names), and said in the README that the Lighthouse, keyboard and 375px figures were measured by hand and are not rerunnable. You should compare the table with the real rubric wording before you submit. |
+
+## Instance 20: Feature: Back link on the footer pages
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Users could not get back from the accessibility statement, help and other footer pages. Add a home link or Back link in the GOV.UK style |
+| **What AI Generated** | A `PageBackLink` component using the GOV.UK Back link pattern, added to the five footer pages, the accessibility statement and the application placeholder page. |
+| **What You Changed + Why** | Chose a Back link over a Home link because GOV.UK guidance returns users to the page they came from, so someone who opens Help from question 2 lands back on question 2 with their answer kept. A page opened directly (nothing to go back to) sends the user to the start page instead of doing nothing; the code tells the two cases apart with the router's `location.key`. Tested every footer page from the start page, from the middle of the journey, opened directly, and with the keyboard (Enter), and all passed. Reran the earlier browser checks, the 26 accessibility scans (0 violations) and the 8 unit tests. Updated spec.md requirement 53 and decision 26. Not tested: a screen reader. |
+
+## Instance 21: Refactor: remove custom.css and use only GOV.UK Frontend
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Remove `custom.css` and use only the classes in `govuk-frontend` |
+| **What AI Generated** | Deleted `src/custom.css` and its import. It had held four things: blue and grey colours for the result panel, a focus-ring rule for elements that code focuses, print rules, and a margin for the footer note. Replaced them with the library's own classes: `govuk-skip-link-focused-element` for the focus ring, `govuk-!-display-none-print` on the skip link, cookie banner, phase banner, service name bar, Back links and footer for printing, and `govuk-!-margin-top-4` on the footer note. |
+| **What You Changed + Why** | The one thing the library cannot do is colour the panel: it is always green, so a Not Eligible result in a green success panel would mislead. Changed the design instead of adding CSS: Eligible keeps the green confirmation panel, and Partially Eligible and Not Eligible show a heading followed by the library's blue notification banner headed "Your support". The print view needed no custom rules, because the library's own print styles draw the panel with a black border. Tested by rerunning the browser checks (all pass), keyboard focus order (skip link is still the first Tab stop and focus resets after each page change), the Back link tests, the 26 accessibility scans (0 violations), the 8 unit tests, and a print-media screenshot. Updated spec.md requirement 37, decisions 12 and 23, plan.md, README and CLAUDE.md. Not tested: a real printer, and the notification banner with a screen reader. |
+
+## Instance 22: Design: coloured result panels and what the user is eligible for
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Result page: green panel for Eligible, blue for Partially Eligible, grey for Not Eligible, and show in the panel what a partially eligible user is eligible for |
+| **What AI Generated** | All three outcomes now use the GOV.UK confirmation panel again (replacing the notification banner from instance 21). The panel body reads "You may be eligible for" and then the support in bold, for example "Heat Pump Support Only" or "Insulation Support Only", and "Your support" with "No grant" for Not Eligible. Two lines at the end of `app.scss` recolour the panel. |
+| **What You Changed + Why** | This partly reverses the instruction to use no custom CSS, because the library has no blue or grey panel. I kept it as small as possible: the panel's background is `var(--govuk-success-colour)`, so the two rules only point that variable at the library's own `--govuk-brand-colour` (blue, rgb 29, 112, 184) and `--govuk-secondary-text-colour` (grey, rgb 72, 73, 73), with no colour values of my own. Checked the colours in the browser, and that white text on both passes the accessibility scan (26 scans, 0 violations). Reran the browser checks, Back link tests and 8 unit tests, and all pass. For flats and for insulated homes with other heating, the intent does not say what the support covers, so the panel just says "Reduced support" and I did not invent more. Updated spec.md requirement 37 and decisions 12 and 23, plus plan.md, README and CLAUDE.md. |
+
+## Instance 23: Refactor: remove the last custom CSS, green panel for every outcome
+
+| Field | Detail |
+|-------|--------|
+| **Date** | 2026-10-13 |
+| **Task** | Remove the two panel colour rules and make the result panel green |
+| **What AI Generated** | Deleted the two rules at the end of `app.scss`, so it now holds only the `govuk-frontend` import and its two settings. Removed the blue and grey panel classes from `ResultPage.jsx`, so every outcome uses `govuk-panel govuk-panel--confirmation`. |
+| **What You Changed + Why** | The user chose no custom CSS over colour-coded panels. The cost is that a Not Eligible result now appears in a green success panel, which could be read as good news at a glance. To reduce that risk without CSS, the wording does the work: the heading says "You are not eligible", and the line in the panel says "Your support" and "No grant" instead of "You may be eligible for". Checked in the browser that all three panels are green (rgb 15, 122, 82) with white text. Reran the browser checks, Back link tests, 26 accessibility scans (0 violations) and 8 unit tests, and all pass. Updated spec.md requirement 37 and decisions 12 and 23, plus plan.md, README and CLAUDE.md. If a reviewer raises the green Not Eligible panel, this log entry explains the choice. |
+
+## Instance 24: Planning: reference number and saved record
 
 | Field | Detail |
 |-------|--------|
@@ -122,7 +221,7 @@ Document **3+ entries** in your AI_LOG covering **3-5 distinct patterns** from t
 | **What AI Generated** | Intent: new in-scope item 13, a success point, and out-of-scope items. Spec: requirements 23, 37 and 41 changed, new requirements 52-63, decisions 23-35 and open questions 21-26. Plan: Step 6 with files, tests and browser checks. It found that the Privacy page promises answers are never stored on a server, and that `npm run dev` has no API. It first proposed server-side validation of the answers (an allowed-values list in `server.py` and a test to keep it matching `questions.js`), then asked about it in more detail (field-level errors, "Other" text rules, request checks). |
 | **What You Changed + Why** | Answered open questions 21-24: records hold the answers, the outcome (worked out on the server by running the real `eligibility.js`, so the rules are not copied) and `savedAt`; the reference leaves out look-alike characters (0, O, 1, I, L); records are kept until deleted by hand, and the Privacy page says so; every submission is a separate check, and updating one is out of scope. **Removed server-side validation**: it is out of scope for this phase and will come later, so it is now an out-of-scope item and decision 35, which records the risk (a request sent outside the app could save answers that aren't valid options). Questions 25 (Vite `/api` proxy for `npm run dev`) and 26 (a "keep a note of your reference" line) are still open. Not built yet. |
 
-## Instance 14: Build: reference number and saved record
+## Instance 25: Build: reference number and saved record
 
 | Field | Detail |
 |-------|--------|
@@ -131,11 +230,11 @@ Document **3+ entries** in your AI_LOG covering **3-5 distinct patterns** from t
 | **What AI Generated** | `server.py`: `POST /api/checks`, a UK-date reference using `secrets` without 0, O, 1, I or L, the outcome worked out by running `eligibility.js` with Node, and a locked, atomic write of `{ answers, outcome, savedAt }` to `data/eligibility-checks.json`. `test_server.py` (9 `unittest` tests: format, look-alike characters, a British Summer Time midnight date, the record shape, the outcome from the real rules, earlier records kept, reference clash, a failure saving nothing, 8 simultaneous submissions). `src/api.js`, the reference in `useAnswers`, Submit with a double-click guard and a GOV.UK error summary on failure, the reference inside the result panel with the support label moved below it, new Privacy text, `.gitignore` for `starter/data/`, and `CLAUDE.md` updates. It ran 29 browser checks in Chromium against the built app. |
 | **What You Changed + Why** | Corrections made during the build: (1) a Change followed by Continue with no actual change was clearing the reference, which goes against spec 59, so `setAnswer` now clears it only when a value differs; (2) the first Privacy text said records let "a check be found again from its reference number", which implies a lookup feature that is out of scope, so it was reworded; (3) the browser check reported a wrong outcome because it read the heading before React Router 7 had re-rendered, so the script was changed to wait (the code was right). Found but not fixed: axe `region` on `.govuk-phase-banner` on every page, which is already on `main`. **Mistake:** a test POST sent to the team's running server on port 5002 saved a blank record to the real records file. It was the only record, and the file and folder were deleted to restore the earlier state. This shows the decision 35 risk in practice, and `CLAUDE.md` now says to test with `CHECKS_FILE`. Q25 (Vite proxy) and Q26 (a "keep a note" line) are still open; the defaults used were no proxy and no extra line. *Pending team review.* |
 
-## Instance 15: Refactor: reference number made in the browser, nothing stored
+## Instance 26: Refactor: reference number made in the browser, nothing stored
 
 | Field | Detail |
 |-------|--------|
 | **Date** | 2026-10-13 |
 | **Task** | The platform can't support saving checks on the server, so: make the reference in the browser and only show it, store nothing, update intent, spec and plan, and clean up what was built for saving |
-| **What AI Generated** | Removed the server-side work from Instances 13 and 14: `server.py`, `.gitignore`, `GovukButton.jsx`, the Privacy text and `CLAUDE.md` were restored to `main`, and `test_server.py`, `src/api.js`, `starter/public/` (old GOV.UK asset copy), `__pycache__/` and the old `dist/` build were deleted. Added `src/reference.js` (`ELG-ddmmyy-XXXXXX`, Europe/London date, `crypto.getRandomValues` without 0, O, 1, I or L, throwing away values that would bias the result) and `src/reference.test.js` (5 tests, run by `npm test`). Kept the result-panel layout and the reference handling in `useAnswers` from Instance 14; Submit now just generates the reference. Rewrote the docs from `main`: intent item 13 and out-of-scope items, spec requirements 23, 37, 41 and 52-58, decisions 23-29, open questions 21-22, plan Step 6. |
+| **What AI Generated** | Removed the server-side work from Instances 24 and 25: `server.py`, `.gitignore`, `GovukButton.jsx`, the Privacy text and `CLAUDE.md` were restored to `main`, and `test_server.py`, `src/api.js`, `starter/public/` (old GOV.UK asset copy), `__pycache__/` and the old `dist/` build were deleted. Added `src/reference.js` (`ELG-ddmmyy-XXXXXX`, Europe/London date, `crypto.getRandomValues` without 0, O, 1, I or L, throwing away values that would bias the result) and `src/reference.test.js` (5 tests, run by `npm test`). Kept the result-panel layout and the reference handling in `useAnswers` from Instance 25; Submit now just generates the reference. Rewrote the docs from `main`: intent item 13 and out-of-scope items, spec requirements 23, 37, 41 and 52-58, decisions 23-29, open questions 21-22, plan Step 6 (renumbered to requirements 54-60 and decisions 27-33 when main was merged in). |
 | **What You Changed + Why** | Decided to drop server storage because of a platform limitation. The JSON records file, the server endpoint and server-side validation are gone, and spec open question 22 records what a later phase would need to store checks. Accepted that references can't be guaranteed unique without storage (spec 58: about 887 million per day). *Pending team review.* |

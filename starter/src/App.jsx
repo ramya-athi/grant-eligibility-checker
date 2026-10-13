@@ -38,13 +38,13 @@ function App() {
 
   return (
     <>
-      <div ref={topRef} tabIndex={-1} className="page-top" />
+      <div ref={topRef} tabIndex={-1} className="govuk-skip-link-focused-element" />
       <SkipLink />
       <CookieBanner />
       <GovukHeader />
       <PhaseBanner phase="alpha" feedbackTo="/contact" />
       <div className="govuk-width-container">
-        <main className="govuk-main-wrapper" id="main-content" role="main" tabIndex={-1}>
+        <main id="main-content" role="main" tabIndex={-1} className="govuk-main-wrapper govuk-skip-link-focused-element">
           <Routes>
             <Route path="/" element={<StartPage />} />
             <Route path="/ownership" element={<OwnershipPage {...questionProps} />} />

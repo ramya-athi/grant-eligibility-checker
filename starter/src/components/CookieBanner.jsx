@@ -27,7 +27,7 @@ export default function CookieBanner() {
   }
 
   return (
-    <div className="govuk-cookie-banner" data-nosnippet role="region" aria-label="Cookies on Green Home Grant">
+    <div className="govuk-cookie-banner govuk-!-display-none-print" data-nosnippet role="region" aria-label="Cookies on Green Home Grant">
       <div className="govuk-cookie-banner__message govuk-width-container">
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-two-thirds">
